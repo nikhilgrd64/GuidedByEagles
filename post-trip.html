@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post-Trip Engagement - Guided by Eagles</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Guided by Eagles</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="trip-planning.html">Plan</a></li>
+                <li><a href="preparation.html">Prepare</a></li>
+                <li><a href="live-support.html">Support</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-banner">
+        <h1>Share Your Travel Story</h1>
+        <p>Upload photos, write your journey, and inspire others.</p>
+    </section>
+
+    <section class="post-trip-content">
+        <h2>Upcoming Trip Countdown</h2>
+        <p>Plan ahead! Your next adventure starts in:</p>
+        <div id="countdown-timer">Loading...</div>
+
+        <h2>Upload Your Travel Story</h2>
+        <form id="story-form">
+            <label for="title">Title:</label>
+            <input type="text" id="title" placeholder="Enter story title">
+
+            <label for="story">Your Experience:</label>
+            <textarea id="story" rows="5" placeholder="Write your travel experience"></textarea>
+
+            <label for="photo">Upload Photos:</label>
+            <input type="file" id="photo" multiple>
+
+            <button type="submit">Submit Story</button>
+        </form>
+
+        <h2>Top Traveler Stories</h2>
+        <div id="story-gallery">
+            <p>No stories yet. Be the first to share!</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Guided by Eagles. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
