@@ -6,12 +6,13 @@
 
   // Firebase Configuration (Replace with Your Firebase Credentials)
   const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyD6TIslWAFvqUvm5GQMjZdUXl7lribpz5Q",
+      authDomain: "guided-by-eagles.firebaseapp.com",
+      projectId: "guided-by-eagles",
+      storageBucket: "guided-by-eagles.firebasestorage.app",
+      messagingSenderId: "959481602259",
+      appId: "1:959481602259:web:1a0c79730838c408403426",
+      measurementId: "G-3T1VPF4MR5"
   };
 
   // Initialize Firebase
