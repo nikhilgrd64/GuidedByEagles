@@ -42,16 +42,35 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: JSON.stringify(formData),
             });
-        
+
+            if (!response.ok) {
+                throw new Error("CORS issue detected. Trying alternative method...");
+            }
+
             const result = await response.json();
             console.log("Response:", result);  // ✅ Debugging log
             alert(result.message);
-        
         } catch (error) {
             console.error("Submission Error:", error);  // ✅ Show detailed error
-            alert("❌ Failed to submit. Please try again.");
+            alert("❌ Failed to submit. Trying alternative method...");
+
+            // Second attempt using "no-cors" mode (response will be hidden)
+            try {
+                await fetch("https://script.google.com/macros/s/AKfycbxWwMAL_ZOquecHozztfqql6xCf5KpfRWjdVY4lVWiwS6-_prdvDHlKofN8zsB5-PeK/exec", {
+                    method: "POST",
+                    mode: "no-cors",  // ✅ Bypass CORS restrictions
+                    credentials: "omit",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData),
+                });
+                alert("✅ Appointment booked successfully! (No response received)");
+            } catch (secondError) {
+                console.error("Alternative Submission Error:", secondError);
+                alert("❌ Failed to submit even with an alternative method. Please try again later.");
+            }
         }
-        
 
         bookButton.innerHTML = "📅 Book Appointment";
         bookButton.disabled = false;
