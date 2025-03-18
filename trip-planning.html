@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trip Planning - Guided by Eagles</title>
-    <link rel="stylesheet" href="styles.css">
-    <script defer src="script.js"></script>
+    <title>Book Your Adventure - Guided by Eagles</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles-plan-preparation.css">
+    <script defer src="script-plan-preparation.js"></script>
 </head>
 <body>
     <header>
@@ -21,38 +22,61 @@
     </header>
 
     <section class="page-banner">
-        <h1>Plan Your Journey</h1>
-        <p>Customize your route, accommodations, and budget with expert guidance.</p>
+        <h1>Book Your Adventure</h1>
+        <p>Plan your next journey with expert guidance.</p>
     </section>
 
     <section class="trip-form">
-        <h2>Create Your Travel Plan</h2>
-        <form>
-            <label for="purpose">Travel Purpose:</label>
-            <select id="purpose">
-                <option>Adventure</option>
-                <option>Leisure</option>
-                <option>Exploration</option>
-            </select>
+        <div class="form-container">
+            <h2>Plan Your Dream Journey</h2>
+            <p>Fill in your details to book a consultation with our travel experts.</p>
+            <form id="appointment-form">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
 
-            <label for="destination">Destination:</label>
-            <input type="text" id="destination" placeholder="Enter your desired destination">
+                <label for="contact">Contact Number:</label>
+                <input type="tel" id="contact" name="contact" placeholder="Enter your phone number" required>
 
-            <label for="route">Preferred Route:</label>
-            <input type="text" id="route" placeholder="Main & Alternate Routes">
+                <label for="purpose">What’s the purpose of your journey?</label>
+                <select id="purpose" name="purpose" required>
+                    <option value="">Select Purpose</option>
+                    <option>Adventure</option>
+                    <option>Relaxation</option>
+                    <option>Exploration</option>
+                    <option>Business Travel</option>
+                </select>
 
-            <label for="stay">Accommodation Preference:</label>
-            <select id="stay">
-                <option>Hotels</option>
-                <option>Hostels</option>
-                <option>Camping</option>
-            </select>
+                <label for="destination">Your Dream Destination:</label>
+                <input type="text" id="destination" name="destination" placeholder="E.g. Bali, Swiss Alps, Amazon Rainforest" required>
 
-            <label for="budget">Budget Estimate ($):</label>
-            <input type="number" id="budget" placeholder="Enter your budget">
+                <label for="route">Preferred Route (Optional):</label>
+                <input type="text" id="route" name="route" placeholder="Specify route preferences">
 
-            <button type="submit">Generate Plan</button>
-        </form>
+                <label for="stay">Accommodation Type:</label>
+                <select id="stay" name="stay" required>
+                    <option value="">Select Accommodation</option>
+                    <option>Luxury Hotel</option>
+                    <option>Budget Hostel</option>
+                    <option>Camping</option>
+                    <option>Dormitories</option>
+                    <option>Homestays</option>
+                </select>
+
+                <label for="budget">Estimated Budget (₹):</label>
+                <input type="number" id="budget" name="budget" placeholder="Enter your estimated budget" required>
+
+                <label for="appointment">Select an Appointment Date:</label>
+                <div class="date-picker">
+                    <input type="datetime-local" id="appointment" name="appointment" required>
+                    <i class="fa-solid fa-calendar-days calendar-icon"></i>
+                </div>
+
+                <label for="email">Your Email:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email for confirmation" required>
+
+                <button type="submit" id="book-button">📅 Book Appointment</button>
+            </form>
+        </div>
     </section>
 
     <footer>
