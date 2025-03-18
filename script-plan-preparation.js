@@ -32,46 +32,46 @@ document.addEventListener("DOMContentLoaded", function () {
         bookButton.innerHTML = "⏳ Booking...";
         bookButton.disabled = true;
 
-        try {
-            const response = await fetch("https://script.google.com/macros/s/AKfycbxWwMAL_ZOquecHozztfqql6xCf5KpfRWjdVY4lVWiwS6-_prdvDHlKofN8zsB5-PeK/exec", {
-                method: "POST",
-                mode: "cors",  // ✅ Allow cross-origin requests
-                credentials: "omit",  // ✅ Prevent sending unnecessary credentials
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData),
-            });
+        // API Endpoint
+        const apiUrl = "https://script.google.com/macros/s/AKfycbxWwMAL_ZOquecHozztfqql6xCf5KpfRWjdVY4lVWiwS6-_prdvDHlKofN8zsB5-PeK/exec";
 
-            if (!response.ok) {
-                throw new Error("CORS issue detected. Trying alternative method...");
-            }
-
-            const result = await response.json();
-            console.log("Response:", result);  // ✅ Debugging log
-            alert(result.message);
-        } catch (error) {
-            console.error("Submission Error:", error);  // ✅ Show detailed error
-            alert("❌ Failed to submit. Trying alternative method...");
-
-            // Second attempt using "no-cors" mode (response will be hidden)
+        // Function to submit form data
+        async function submitForm(mode) {
             try {
-                await fetch("https://script.google.com/macros/s/AKfycbxWwMAL_ZOquecHozztfqql6xCf5KpfRWjdVY4lVWiwS6-_prdvDHlKofN8zsB5-PeK/exec", {
+                const response = await fetch(apiUrl, {
                     method: "POST",
-                    mode: "no-cors",  // ✅ Bypass CORS restrictions
+                    mode: mode, // "cors" or "no-cors"
                     credentials: "omit",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify(formData),
                 });
-                alert("✅ Appointment booked successfully! (No response received)");
-            } catch (secondError) {
-                console.error("Alternative Submission Error:", secondError);
-                alert("❌ Failed to submit even with an alternative method. Please try again later.");
+
+                if (mode === "cors") {
+                    if (!response.ok) throw new Error("CORS error. Switching to alternative method...");
+                    const result = await response.json();
+                    alert(result.message);
+                } else {
+                    alert("✅ Appointment booked successfully! (No response received)");
+                }
+            } catch (error) {
+                console.error(`Submission Error (${mode} mode):`, error);
+                return false;
             }
+            return true;
         }
 
+        // Attempt 1: Using "cors" mode
+        const corsSuccess = await submitForm("cors");
+
+        // Attempt 2: If CORS fails, use "no-cors" as a fallback
+        if (!corsSuccess) {
+            alert("⚠️ Retrying with alternative method...");
+            await submitForm("no-cors");
+        }
+
+        // Reset button and form
         bookButton.innerHTML = "📅 Book Appointment";
         bookButton.disabled = false;
         document.getElementById("appointment-form").reset();
