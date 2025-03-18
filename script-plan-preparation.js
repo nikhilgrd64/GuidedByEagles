@@ -1,8 +1,25 @@
-<!-- Firebase SDK (ES Module) -->
-<script type="module">
-  // Import Firebase Modules
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+  <!-- Firebase SDK (CDN) -->
+<script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js"></script>
+
+<script>
+  // Firebase Configuration (Replace with your actual Firebase credentials)
+  const firebaseConfig = {
+    const firebaseConfig = {
+    apiKey: "AIzaSyD6TIslWAFvqUvm5GQMjZdUXl7lribpz5Q",
+    authDomain: "guided-by-eagles.firebaseapp.com",
+    projectId: "guided-by-eagles",
+    storageBucket: "guided-by-eagles.firebasestorage.app",
+    messagingSenderId: "959481602259",
+    appId: "1:959481602259:web:1a0c79730838c408403426",
+    measurementId: "G-3T1VPF4MR5"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
 
   // Firebase Configuration (Replace with Your Firebase Credentials)
   const firebaseConfig = {
