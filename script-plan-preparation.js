@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
             email: document.getElementById("email").value,
         };
 
+        // Validate required fields
         if (!formData.name || !formData.contact || !formData.purpose || !formData.destination || !formData.stay || !formData.budget || !formData.appointment || !formData.email) {
             alert("❌ Please complete all required fields.");
             return;
@@ -32,43 +33,28 @@ document.addEventListener("DOMContentLoaded", function () {
         bookButton.innerHTML = "⏳ Booking...";
         bookButton.disabled = true;
 
-        // API Endpoint
+        // Google Apps Script API Endpoint
         const apiUrl = "https://script.google.com/macros/s/AKfycbxWwMAL_ZOquecHozztfqql6xCf5KpfRWjdVY4lVWiwS6-_prdvDHlKofN8zsB5-PeK/exec";
 
-        // Function to submit form data
-        async function submitForm(mode) {
-            try {
-                const response = await fetch(apiUrl, {
-                    method: "POST",
-                    mode: mode, // "cors" or "no-cors"
-                    credentials: "omit",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(formData),
-                });
+        try {
+            const response = await fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            });
 
-                if (mode === "cors") {
-                    if (!response.ok) throw new Error("CORS error. Switching to alternative method...");
-                    const result = await response.json();
-                    alert(result.message);
-                } else {
-                    alert("✅ Appointment booked successfully! (No response received)");
-                }
-            } catch (error) {
-                console.error(`Submission Error (${mode} mode):`, error);
-                return false;
+            const result = await response.json();
+
+            if (result.status === "success") {
+                alert("✅ " + result.message);
+            } else {
+                alert("❌ Submission failed: " + result.message);
             }
-            return true;
-        }
-
-        // Attempt 1: Using "cors" mode
-        const corsSuccess = await submitForm("cors");
-
-        // Attempt 2: If CORS fails, use "no-cors" as a fallback
-        if (!corsSuccess) {
-            alert("⚠️ Retrying with alternative method...");
-            await submitForm("no-cors");
+        } catch (error) {
+            console.error("Error submitting form:", error);
+            alert("❌ An error occurred. Please try again.");
         }
 
         // Reset button and form
