@@ -1,5 +1,5 @@
 // Import Firebase Modules
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 // Firebase Configuration
@@ -13,8 +13,15 @@ const firebaseConfig = {
     measurementId: "G-3T1VPF4MR5"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Check if Firebase is already initialized
+let app;
+if (!getApps().length) {
+    app = initializeApp(firebaseConfig);
+} else {
+    app = getApps()[0]; // Use the existing initialized app
+}
+
+// Initialize Firestore
 const db = getFirestore(app);
 
 // Wait for DOM to Load
