@@ -4,7 +4,7 @@ body {
     background: #0d0d0d;
     color: white;
     text-align: center;
-    scroll-behavior: smooth; /* Smooth scrolling */
+    scroll-behavior: smooth;
 }
 
 header {
@@ -59,23 +59,17 @@ nav ul li a:hover {
 .page-banner h1 {
     font-size: 2.5em;
     font-weight: bold;
-    display: inline-block;
     padding: 10px 20px;
     background: black;
     border-radius: 5px;
-    margin-top: 10px;
 }
 
 .page-banner p {
     font-size: 1.2em;
-    font-weight: bold;
     opacity: 0.9;
-    display: inline-block;
     padding: 10px 20px;
     background: black;
-    color: white !important;
     border-radius: 5px;
-    margin-top: 10px;
 }
 
 .post-trip-content {
@@ -162,6 +156,7 @@ button:hover {
     margin-top: 20px;
 }
 
+/* Individual Story Entry */
 .story-entry {
     padding: 15px;
     margin: 10px 0;
@@ -182,11 +177,29 @@ button:hover {
     margin-bottom: 5px;
 }
 
+/* Styling for Story Sections */
 .story-entry p {
     font-size: 1.1em;
     color: white;
+    margin: 5px 0;
 }
 
+.story-entry p strong {
+    color: #ff4d4d;
+}
+
+/* Links Styling */
+.story-entry a {
+    color: #ffcc00;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.story-entry a:hover {
+    text-decoration: underline;
+}
+
+/* Horizontal Line for Separation */
 .story-entry hr {
     border: 0;
     height: 1px;
