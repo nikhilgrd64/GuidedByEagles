@@ -4,28 +4,21 @@ document.querySelectorAll('nav ul li a').forEach(anchor => {
         const href = this.getAttribute('href');
 
         // Ignore external links (e.g., "trip-planning.html")
-        if (!href.startsWith("#")) return;
+        if (!href.startsWith("#")) {
+            return;
+        }
 
         const target = document.querySelector(href);
-
-        // Prevent default behavior only if the target exists
         if (target) {
             event.preventDefault();
             target.scrollIntoView({ behavior: 'smooth' });
-        } else {
-            console.warn("Target not found for:", href);
         }
     });
 });
 
-// Quick Planning Tool - Best Time to Visit (Dropdown Version)
-function getBestTime() {
-    let selectedDestination = document.getElementById("destinationSelect").value;
-    let bestTimeResult = document.getElementById("bestTimeResult");
-
-    // Destination-based best time recommendations
-    const travelSeasons = {
-        "himalayas": "April to June & September to November",
+// Destination-based best time recommendations
+const travelSeasons = {
+   "himalayas": "April to June & September to November",
         "rajasthan": "October to March (Winter season is best for exploring deserts and forts)",
         "goa": "November to February (Pleasant weather, ideal for beaches)",
         "kerala": "September to March (Cool, best for backwaters & hill stations)",
@@ -73,28 +66,96 @@ function getBestTime() {
         "bir billing": "October to June (Best place for paragliding in India, Himachal Pradesh)",
         "patalkot": "October to March (Hidden valley in Madhya Pradesh, home to ancient tribes)",
         "dibang valley": "October to March (One of India's least explored valleys, Arunachal Pradesh)"
-    };
+};
 
-    // Convert input to lowercase for consistency
-    selectedDestination = selectedDestination.toLowerCase();
+// Destination-based featured routes
+const featuredRoutes = {    
+            "himalayas": "🚗 Manali → Leh → Pangong Lake → Nubra Valley → Srinagar",
+            "rajasthan": "🚗 Jaipur → Jodhpur → Jaisalmer → Udaipur",
+            "goa": "🚗 Panaji → North Goa → South Goa → Dudhsagar Falls",
+            "kerala": "🚗 Kochi → Munnar → Thekkady → Alleppey → Kovalam",
+            "ladakh": "🚗 Leh → Nubra Valley → Pangong Lake → Tso Moriri",
+            "sikkim": "🚗 Gangtok → Tsomgo Lake → Lachen → Yumthang Valley",
+            "andaman": "🚗 Port Blair → Havelock Island → Neil Island → Baratang",
+            "north-east india": "🚗 Guwahati → Shillong → Cherrapunji → Dawki → Kaziranga",
+            "uttarakhand": "🚗 Rishikesh → Auli → Valley of Flowers → Kedarnath",
+            "kashmir": "🚗 Srinagar → Gulmarg → Sonmarg → Pahalgam",
+            "meghalaya": "🚗 Shillong → Cherrapunji → Mawlynnong → Laitlum Canyon",
+            "spiti valley": "🚗 Manali → Kaza → Tabo → Pin Valley",
+            "zanskar valley": "🚗 Kargil → Padum → Zangla → Phugtal Monastery",
+            "majuli island": "🚗 Jorhat → Majuli Island → Sivasagar",
+            "lonar crater": "🚗 Aurangabad → Ajanta & Ellora → Lonar Crater",
+            "sandakphu": "🚗 Manebhanjan → Tumling → Kalipokhri → Sandakphu",
+            "tawang": "🚗 Guwahati → Bomdila → Dirang → Tawang",
+            "dhanushkodi": "🚗 Rameswaram → Dhanushkodi → Pamban Bridge",
+            "gokarna": "🚗 Bangalore → Murudeshwar → Gokarna → Yana Caves",
+            "hampi": "🚗 Bangalore → Hospet → Hampi → Anegundi",
+            "chopta": "🚗 Rishikesh → Ukhimath → Chopta → Tungnath",
+            "valley of flowers": "🚗 Joshimath → Govindghat → Ghangaria → Valley of Flowers",
+            "khajjiar": "🚗 Dalhousie → Khajjiar → Chamba",
+            "munsiyari": "🚗 Almora → Chaukori → Munsiyari → Birthi Falls",
+            "shillong": "🚗 Guwahati → Shillong → Laitlum → Dawki",
+            "mandu": "🚗 Indore → Maheshwar → Mandu → Omkareshwar",
+            "majkhali": "🚗 Nainital → Ranikhet → Majkhali",
+            "bhimashankar": "🚗 Pune → Bhimashankar → Matheran",
+            "chandipur": "🚗 Bhubaneswar → Konark → Chandipur → Simlipal",
+            "hogenakkal": "🚗 Bangalore → Hogenakkal → Dharmapuri",
+            "ziro valley": "🚗 Itanagar → Ziro Valley → Daporijo",
+            "mukteshwar": "🚗 Nainital → Mukteshwar → Bhowali",
+            "lepchajagat": "🚗 Darjeeling → Lepchajagat → Mirik",
+            "pangong lake": "🚗 Leh → Chang La → Pangong Lake",
+            "malana": "🚗 Kasol → Malana → Tosh",
+            "araku valley": "🚗 Visakhapatnam → Borra Caves → Araku Valley",
+            "kanatal": "🚗 Dehradun → Kanatal → Dhanaulti",
+            "mawlynnong": "🚗 Shillong → Mawlynnong → Dawki",
+            "laitlum canyon": "🚗 Shillong → Laitlum Canyon → Smit Village",
+            "agnee kund": "🚗 Ujjain → Omkareshwar → Agnee Kund",
+            "gurez valley": "🚗 Srinagar → Bandipora → Gurez Valley",
+            "bir billing": "🚗 Mandi → Bir → Billing",
+            "patalkot": "🚗 Chhindwara → Tamia → Patalkot",
+            "dibang valley": "🚗 Roing → Mayudia Pass → Dibang Valley"  
+};
 
-    // Check if the selected destination exists in the predefined list
+// Function to get the best time to visit a destination
+function getBestTime() {
+    let selectedDestination = document.getElementById("destinationSelect").value.toLowerCase();
+    let bestTimeResult = document.getElementById("bestTimeResult");
+
     if (travelSeasons[selectedDestination]) {
-        bestTimeResult.innerText = `Best time to visit ${selectedDestination.charAt(0).toUpperCase() + selectedDestination.slice(1)} is ${travelSeasons[selectedDestination]}.`;
+        bestTimeResult.innerText = `Best time to visit ${selectedDestination.charAt(0).toUpperCase() + selectedDestination.slice(1)}: ${travelSeasons[selectedDestination]}.`;
     } else {
         bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
     }
 }
 
-// Run the function to populate dropdown on page load
-document.addEventListener("DOMContentLoaded", () => {
-    let dropdown = document.getElementById("destinationSelect");
+// Function to get the featured route for a destination
+function getFeaturedRoute() {
+    let selectedDestination = document.getElementById("routeSelect").value.toLowerCase();
+    let routeResult = document.getElementById("routeResult");
 
-    // Populate dropdown dynamically
-    Object.keys(travelSeasons).forEach((place) => {
+    if (featuredRoutes[selectedDestination]) {
+        routeResult.innerText = `Recommended route for ${selectedDestination.charAt(0).toUpperCase() + selectedDestination.slice(1)}: ${featuredRoutes[selectedDestination]}`;
+    } else {
+        routeResult.innerText = "Route details not available. Please check specific travel guides.";
+    }
+}
+
+// Populate Dropdowns on Page Load
+document.addEventListener("DOMContentLoaded", () => {
+    let destinationDropdown = document.getElementById("destinationSelect");
+    let routeDropdown = document.getElementById("routeSelect");
+
+    Object.keys(travelSeasons).forEach(place => {
         let option = document.createElement("option");
-        option.value = place.toLowerCase(); // Use lowercase values for consistency
-        option.textContent = `🌍 ${place}`; // Adding an emoji for better visuals
-        dropdown.appendChild(option);
+        option.value = place;
+        option.textContent = place.charAt(0).toUpperCase() + place.slice(1);
+        destinationDropdown.appendChild(option);
+    });
+
+    Object.keys(featuredRoutes).forEach(place => {
+        let option = document.createElement("option");
+        option.value = place;
+        option.textContent = place.charAt(0).toUpperCase() + place.slice(1);
+        routeDropdown.appendChild(option);
     });
 });
