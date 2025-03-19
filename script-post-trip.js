@@ -37,13 +37,14 @@ document.addEventListener("DOMContentLoaded", function () {
         // Collect form data
         const title = document.getElementById("title").value.trim();
         const destination = document.getElementById("destination").value.trim();
+        const travelPeriod = document.getElementById("travel-period").value.trim();
         const itinerary = document.getElementById("itinerary").value.trim();
         const experiences = document.getElementById("experiences").value.trim();
         const tips = document.getElementById("tips").value.trim();
         const links = document.getElementById("links").value.trim();
 
         // Validate input fields
-        if (!title || !destination || !itinerary || !experiences || !tips) {
+        if (!title || !destination || !travelPeriod || !itinerary || !experiences || !tips) {
             alert("❌ Please fill in all required fields.");
             return;
         }
@@ -58,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
             await addDoc(collection(db, "stories"), {
                 title,
                 destination,
+                travelPeriod,
                 itinerary,
                 experiences,
                 tips,
@@ -91,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            let storyHTML = "<ol>"; // Ordered list for numbering
+            let storyHTML = "<ol>";
             let count = 1;
 
             querySnapshot.forEach((doc) => {
@@ -100,6 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <li class="story-entry">
                         <h3>${count}. ${data.title}</h3>
                         <p><strong>📍 Destination:</strong> ${data.destination}</p>
+                        <p><strong>📅 Travel Period:</strong> ${data.travelPeriod}</p>
                         <p><strong>🗺️ Itinerary:</strong> ${data.itinerary}</p>
                         <p><strong>🌟 Experiences:</strong> ${data.experiences}</p>
                         <p><strong>🎯 Travel Tips:</strong> ${data.tips}</p>
