@@ -72,20 +72,6 @@ nav ul li a {
     border-radius: 5px;
     margin-top: 10px;
 }
-
-
-/*
-.page-banner h1 {
-    font-size: 2.5em;
-    font-weight: bold;
-    text-shadow: 3px 3px 10px rgba(255, 0, 0, 0.6);
-}
-
-.page-banner p {
-    font-size: 1.2em;
-    opacity: 0.9;
-}
-*/
 /* Preparation Content */
 .preparation-content, .form-container {
     width: 60%;
