@@ -133,6 +133,29 @@ textarea {
     resize: vertical;
 }
 
+/* Style for the Travel Period (Month & Year) dropdown */
+input[type="month"] {
+    appearance: none;
+    background: black;
+    color: white;
+    border: 1px solid rgba(255, 0, 0, 0.5);
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+}
+
+input[type="month"]:hover {
+    border-color: red;
+}
+
+input[type="month"]:focus {
+    outline: none;
+    border-color: #ff4d4d;
+    box-shadow: 0px 0px 8px rgba(255, 77, 77, 0.5);
+}
+
 button {
     background: red;
     color: white;
