@@ -34,10 +34,7 @@
     <section id="trip-planning">
         <a href="trip-planning.html"><h2>Plan Your Journey</h2></a>
         <p>Get expert advice, routes, and tips for your next adventure.</p>
-        <div class="featured-routes">
-            <h3>Featured Routes</h3>
-            <p>Discover popular and newly added adventure routes.</p>
-        </div>
+        
         <!-- Best Time to Visit Section with Dropdown -->
 <div class="best-time">
     <h3>Best Time to Visit</h3>
@@ -94,6 +91,19 @@
     <p id="bestTimeResult">Choose the destination to see the best time to visit.</p>
 </div>
 
+             <!-- Featured Routes Section -->
+<div class="featured-routes">
+    <h3>Featured Routes</h3>
+    <label for="routeSelect">Select a Destination:</label>
+    <div class="custom-dropdown">
+        <select id="routeSelect" onchange="getRoutes()">
+            <option value="">-- Choose a Destination --</option>
+        </select>
+    </div>
+    <p id="routeResult">Select a destination to see the best routes.</p>
+</div>
+     
+        
     </section>
 
     <!-- Prepare for the Road Section -->
