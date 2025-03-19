@@ -1,6 +1,6 @@
 // Import Firebase Modules
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -80,6 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             alert("✅ Story submitted successfully!");
             storyForm.reset();
+            loadStories(); // Refresh stories after submission
         } catch (error) {
             console.error("Error submitting story:", error);
             alert("❌ Submission failed. Please try again.");
@@ -89,4 +90,44 @@ document.addEventListener("DOMContentLoaded", function () {
         submitButton.innerHTML = "📤 Submit Story";
         submitButton.disabled = false;
     });
+
+    // Function to Load and Display Stories
+    async function loadStories() {
+        const storyGallery = document.getElementById("story-gallery");
+        storyGallery.innerHTML = "<p>Loading stories...</p>";
+
+        try {
+            const querySnapshot = await getDocs(collection(db, "stories"));
+
+            if (querySnapshot.empty) {
+                storyGallery.innerHTML = "<p>No stories yet. Be the first to share!</p>";
+                return;
+            }
+
+            let storyHTML = "<ol>"; // Ordered list for numbering
+            let count = 1;
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                storyHTML += `
+                    <li class="story-entry">
+                        <h3>${count}. ${data.title}</h3>
+                        <p>${data.story}</p>
+                        <hr>
+                    </li>
+                `;
+                count++;
+            });
+
+            storyHTML += "</ol>";
+            storyGallery.innerHTML = storyHTML;
+
+        } catch (error) {
+            console.error("Error loading stories:", error);
+            storyGallery.innerHTML = "<p>Error loading stories. Please try again.</p>";
+        }
+    }
+
+    // Load stories when page loads
+    loadStories();
 });
