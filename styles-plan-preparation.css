@@ -35,9 +35,10 @@ nav ul li {
 }
 
 nav ul li a {
-    color: white;
+    color: white !important;
     text-decoration: none;
-    font-weight: bold;
+    transition: color 0.3s ease;
+    font-weight: bold;;
 }
 
 .page-banner {
