@@ -17,14 +17,14 @@ document.querySelectorAll('nav ul li a').forEach(anchor => {
         }
     });
 });
-// Quick Planning Tool - Best Time to Visit
+
+// Quick Planning Tool - Best Time to Visit (Dropdown Version)
 function getBestTime() {
-    let location = document.getElementById("locationInput").value.trim().toLowerCase();
+    let selectedDestination = document.getElementById("destinationSelect").value;
     let bestTimeResult = document.getElementById("bestTimeResult");
 
     // Destination-based best time recommendations
     const travelSeasons = {
-        // 🌄 Popular Destinations
         "himalayas": "April to June & September to November",
         "rajasthan": "October to March (Winter season is best for exploring deserts and forts)",
         "goa": "November to February (Pleasant weather, ideal for beaches)",
@@ -37,7 +37,7 @@ function getBestTime() {
         "kashmir": "March to October (Tulip season to autumn views)",
         "meghalaya": "October to April (Waterfalls and pleasant weather)",
 
-        // 🏕️ **Lesser-Known Destinations**
+        // 🏕️ Lesser-Known Destinations
         "spiti valley": "May to September (Best for high-altitude road trips)",
         "zanskar valley": "June to September (For adventure seekers and monks' monasteries)",
         "majuli island": "October to March (World’s largest river island in Assam, best for cultural experiences)",
@@ -49,8 +49,8 @@ function getBestTime() {
         "hampi": "October to February (UNESCO ruins, great for history lovers and backpackers)",
         "chopta": "March to June & September to November (Mini Switzerland of India, great for treks)",
         "valley of flowers": "July to September (A paradise of blooming flowers in Uttarakhand)",
-        
-        // 🌿 **Hidden & Unexplored Gems**
+
+        // 🌿 Hidden & Unexplored Gems
         "khajjiar": "March to June & September to November (Mini Switzerland of India in Himachal Pradesh)",
         "munsiyari": "March to June (Hidden Himalayan gem in Uttarakhand, best for trekking)",
         "shillong": "October to April (Best time to explore Scotland of the East)",
@@ -72,14 +72,29 @@ function getBestTime() {
         "gurez valley": "May to September (Offbeat paradise in Kashmir, close to Indo-Pak border)",
         "bir billing": "October to June (Best place for paragliding in India, Himachal Pradesh)",
         "patalkot": "October to March (Hidden valley in Madhya Pradesh, home to ancient tribes)",
-        "dibang valley": "October to March (One of India's least explored valleys, Arunachal Pradesh)",
+        "dibang valley": "October to March (One of India's least explored valleys, Arunachal Pradesh)"
     };
 
-    // Check if the entered location exists in the predefined list
-    if (travelSeasons[location]) {
-        bestTimeResult.innerText = `Best time to visit ${location.charAt(0).toUpperCase() + location.slice(1)} is ${travelSeasons[location]}.`;
+    // Convert input to lowercase for consistency
+    selectedDestination = selectedDestination.toLowerCase();
+
+    // Check if the selected destination exists in the predefined list
+    if (travelSeasons[selectedDestination]) {
+        bestTimeResult.innerText = `Best time to visit ${selectedDestination.charAt(0).toUpperCase() + selectedDestination.slice(1)} is ${travelSeasons[selectedDestination]}.`;
     } else {
         bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
     }
 }
 
+// Run the function to populate dropdown on page load
+document.addEventListener("DOMContentLoaded", () => {
+    let dropdown = document.getElementById("destinationSelect");
+
+    // Populate dropdown dynamically
+    Object.keys(travelSeasons).forEach((place) => {
+        let option = document.createElement("option");
+        option.value = place.toLowerCase(); // Use lowercase values for consistency
+        option.textContent = `🌍 ${place}`; // Adding an emoji for better visuals
+        dropdown.appendChild(option);
+    });
+});
