@@ -1,57 +1,104 @@
+// Import Firebase Modules
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
+
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyD6TIslWAFvqUvm5GQMjZdUXl7lribpz5Q",
+    authDomain: "guided-by-eagles.firebaseapp.com",
+    projectId: "guided-by-eagles",
+    storageBucket: "guided-by-eagles.appspot.com",
+    messagingSenderId: "959481602259",
+    appId: "1:959481602259:web:1a0c79730838c408403426",
+    measurementId: "G-3T1VPF4MR5"
+};
+
+// Check if Firebase is already initialized
+let app;
+if (!getApps().length) {
+    app = initializeApp(firebaseConfig);
+} else {
+    app = getApps()[0];
+}
+
+// Initialize Firestore & Storage
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+// Wait for DOM to Load
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Post-Trip Engagement page loaded!");
 
     // Countdown Timer
-    function startCountdown(targetDate) {
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = targetDate - now;
+    function updateCountdown() {
+        const tripDate = new Date("2025-07-01T00:00:00");
+        const now = new Date();
+        const timeDifference = tripDate - now;
 
-            if (distance < 0) {
-                document.getElementById("countdown-timer").innerHTML = "🎉 Your trip has started!";
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-
-            document.getElementById("countdown-timer").innerHTML = `${days}d ${hours}h ${minutes}m`;
-        }
-
-        updateCountdown();
-        setInterval(updateCountdown, 60000);
-    }
-
-    const nextTripDate = new Date("2025-07-01T00:00:00").getTime();
-    startCountdown(nextTripDate);
-
-    // Story Submission with Animation
-    document.getElementById("story-form").addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        const title = document.getElementById("title").value;
-        const story = document.getElementById("story").value;
-        const gallery = document.getElementById("story-gallery");
-
-        if (title.trim() === "" || story.trim() === "") {
-            alert("❌ Please fill in all fields before submitting.");
+        if (timeDifference <= 0) {
+            document.getElementById("countdown-timer").innerHTML = "🎉 Your trip has started!";
             return;
         }
 
-        const newStory = document.createElement("div");
-        newStory.classList.add("story-entry");
-        newStory.innerHTML = `<h3>${title}</h3><p>${story}</p>`;
+        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeDifference / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
 
-        gallery.prepend(newStory);
-        document.getElementById("story-form").reset();
+        document.getElementById("countdown-timer").innerHTML = `${days}d ${hours}h ${minutes}m`;
+    }
 
-        // Show success animation
-        const successMsg = document.createElement("div");
-        successMsg.innerHTML = "✅ Story submitted successfully!";
-        successMsg.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#0d0d0d; color:#ffcc00; padding:15px; border-radius:5px; box-shadow:0px 0px 10px rgba(255,255,0,0.6); font-weight:bold;";
-        document.body.appendChild(successMsg);
+    setInterval(updateCountdown, 60000);
+    updateCountdown();
 
-        setTimeout(() => successMsg.remove(), 3000);
+    // Story Submission Form
+    const storyForm = document.getElementById("story-form");
+
+    storyForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        // Collect form data
+        const title = document.getElementById("title").value.trim();
+        const story = document.getElementById("story").value.trim();
+        const fileInput = document.getElementById("photo");
+        const file = fileInput.files[0];
+
+        // Validate input fields
+        if (!title || !story) {
+            alert("❌ Please enter a title and story before submitting.");
+            return;
+        }
+
+        // Show loading state
+        const submitButton = storyForm.querySelector("button");
+        submitButton.innerHTML = "⏳ Uploading...";
+        submitButton.disabled = true;
+
+        try {
+            let imageURL = "";
+            if (file) {
+                const storageRef = ref(storage, `stories/${file.name}`);
+                const uploadTask = await uploadBytesResumable(storageRef, file);
+                imageURL = await getDownloadURL(uploadTask.ref);
+            }
+
+            // Store the story in Firestore
+            await addDoc(collection(db, "stories"), {
+                title,
+                story,
+                imageURL,
+                timestamp: serverTimestamp()
+            });
+
+            alert("✅ Story submitted successfully!");
+            storyForm.reset();
+        } catch (error) {
+            console.error("Error submitting story:", error);
+            alert("❌ Submission failed. Please try again.");
+        }
+
+        // Reset button
+        submitButton.innerHTML = "📤 Submit Story";
+        submitButton.disabled = false;
     });
 });
