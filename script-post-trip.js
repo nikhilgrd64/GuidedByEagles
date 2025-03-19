@@ -28,27 +28,6 @@ const db = getFirestore(app);
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Post-Trip Engagement page loaded!");
 
-    // Countdown Timer
-    function updateCountdown() {
-        const tripDate = new Date("2025-07-01T00:00:00");
-        const now = new Date();
-        const timeDifference = tripDate - now;
-
-        if (timeDifference <= 0) {
-            document.getElementById("countdown-timer").innerHTML = "🎉 Your trip has started!";
-            return;
-        }
-
-        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeDifference / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
-
-        document.getElementById("countdown-timer").innerHTML = `${days}d ${hours}h ${minutes}m`;
-    }
-
-    setInterval(updateCountdown, 60000);
-    updateCountdown();
-
     // Story Submission Form
     const storyForm = document.getElementById("story-form");
 
@@ -57,11 +36,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Collect form data
         const title = document.getElementById("title").value.trim();
-        const story = document.getElementById("story").value.trim();
+        const destination = document.getElementById("destination").value.trim();
+        const itinerary = document.getElementById("itinerary").value.trim();
+        const experiences = document.getElementById("experiences").value.trim();
+        const tips = document.getElementById("tips").value.trim();
+        const links = document.getElementById("links").value.trim();
 
         // Validate input fields
-        if (!title || !story) {
-            alert("❌ Please enter a title and story before submitting.");
+        if (!title || !destination || !itinerary || !experiences || !tips) {
+            alert("❌ Please fill in all required fields.");
             return;
         }
 
@@ -74,7 +57,11 @@ document.addEventListener("DOMContentLoaded", function () {
             // Store the story in Firestore
             await addDoc(collection(db, "stories"), {
                 title,
-                story,
+                destination,
+                itinerary,
+                experiences,
+                tips,
+                links,
                 timestamp: serverTimestamp()
             });
 
@@ -112,7 +99,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 storyHTML += `
                     <li class="story-entry">
                         <h3>${count}. ${data.title}</h3>
-                        <p>${data.story}</p>
+                        <p><strong>📍 Destination:</strong> ${data.destination}</p>
+                        <p><strong>🗺️ Itinerary:</strong> ${data.itinerary}</p>
+                        <p><strong>🌟 Experiences:</strong> ${data.experiences}</p>
+                        <p><strong>🎯 Travel Tips:</strong> ${data.tips}</p>
+                        ${data.links ? `<p><strong>🔗 Links:</strong> <a href="${data.links}" target="_blank">${data.links}</a></p>` : ""}
                         <hr>
                     </li>
                 `;
