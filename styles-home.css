@@ -145,8 +145,21 @@ p#bestTimeResult {
     padding: 10px;
     border-radius: 5px;
     background: rgba(255, 165, 0, 0.2);
+    display: inline-block;
 }
 
+
+/* Route Result Styling */
+p#routeResult {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #f39c12;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 5px;
+    background: rgba(255, 165, 0, 0.2);
+    display: inline-block;
+}
 
 /* Footer */
 footer {
