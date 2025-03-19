@@ -74,6 +74,10 @@ nav ul li a {
     text-decoration: none;
     border-radius: 5px;
     margin-top: 10px;
+    transition: background 0.3s ease;
+}
+.cta-button:hover {
+    background: darkred;
 }
 
 /* Sections */
@@ -87,13 +91,14 @@ section p {
     color: white !important;
 }
 
+/* Dropdown Styling */
 .custom-dropdown {
     position: relative;
     display: inline-block;
     width: 100%;
     max-width: 320px;
 }
-
+/* Dropdown Select Field */
 select {
     width: 100%;
     padding: 10px;
@@ -104,11 +109,31 @@ select {
     border: 1px solid #555;
     appearance: none;
     cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+/* Add a dropdown arrow */
+.custom-dropdown::after {
+    content: "▼";
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    pointer-events: none;
 }
 
 /* Highlight selected option */
 select:focus {
     border: 2px solid #f39c12;
+    outline: none;
+}
+
+/* Hover Effect */
+select:hover {
+    background-color: #333;
 }
 
 /* Best Time Result Styling */
@@ -117,6 +142,9 @@ p#bestTimeResult {
     font-weight: bold;
     color: #f39c12;
     font-size: 18px;
+    padding: 10px;
+    border-radius: 5px;
+    background: rgba(255, 165, 0, 0.2);
 }
 
 
