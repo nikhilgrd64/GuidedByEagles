@@ -8,6 +8,8 @@
     <script defer src="script-home.js"></script>
 </head>
 <body>
+    
+    <!-- Header & Navigation -->
     <header>
         <nav>
             <div class="logo">Guided by Eagles</div>
@@ -19,32 +21,59 @@
             </ul>
         </nav>
     </header>
- 
+    <!-- Hero Section -->
     <section id="hero">
         <div class="hero-content">
             <h1>Explore the Unknown</h1>
             <p>Your Journey, Your Adventure, Our Guidance.</p>
-            <a href="trip-planning.html" class="cta-button">Plan Your Trip</a>
+            <a href="trip-planning.html" class="cta-button">Plan Your Journey</a>
         </div>
     </section>
+
+    <!-- Plan Your Journey Section -->
     <section id="trip-planning">
         <a href="trip-planning.html"><h2>Plan Your Journey</h2></a>
         <p>Get expert advice, routes, and tips for your next adventure.</p>
+        <div class="featured-routes">
+            <h3>Featured Routes</h3>
+            <p>Discover popular and newly added adventure routes.</p>
+        </div>
+        <div class="best-time">
+            <h3>Best Time to Visit</h3>
+            <input type="text" id="locationInput" placeholder="Enter a location">
+            <button onclick="getBestTime()">Find Out</button>
+            <p id="bestTimeResult"></p>
+        </div>
     </section>
- 
+
+    <!-- Prepare for the Road Section -->
     <section id="preparation">
         <a href="preparation.html"><h2>Prepare for the Road</h2></a>
         <p>Ensure your fitness, vehicle, and luggage are ready.</p>
+        <div class="vehicle-guide">
+            <h3>Vehicle Readiness Guide</h3>
+            <p>Tips for preparing your car or bike for long journeys.</p>
+        </div>
     </section>
- 
+    
+    <!-- Live Travel Support Section -->
     <section id="support">
         <a href="live-support.html"><h2>Live Travel Support</h2></a>
         <p>Real-time assistance, road conditions, and emergency help.</p>
+          <div class="travel-alerts">
+            <h3>Real-Time Travel Alerts</h3>
+            <p id="alertMessage">No new alerts.</p>
+        </div>
     </section>
- 
+
+    <!-- Travel Stories Section -->
     <section id="stories">
         <a href="post-trip.html"><h2>Travel Stories</h2></a>
         <p>Read and share inspiring journey experiences.</p>
+        <div class="featured-adventure">
+            <h3>Featured Adventure of the Month</h3>
+            <p>Highlighting an exciting journey from our travelers.</p>
+        </div>
     </section>
  
     <footer>
