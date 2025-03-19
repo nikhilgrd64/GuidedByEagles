@@ -2,43 +2,45 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: black;
-    color: white;
+    color: white !important;
 }
- 
+
 header {
     background: #8B0000;
     padding: 15px 0;
     text-align: center;
 }
- 
+
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
 }
- 
+
 .logo {
     font-size: 24px;
     font-weight: bold;
+    color: white !important;
 }
- 
+
 nav ul {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
 }
- 
+
 nav ul li {
     margin: 0 15px;
 }
- 
+
 nav ul li a {
-    color: white;
+    color: white !important;
     text-decoration: none;
+    font-weight: bold;
 }
- 
+
 #hero {
     background: url('hero-image.jpg') no-repeat center center/cover;
     height: 90vh;
@@ -47,29 +49,42 @@ nav ul li a {
     justify-content: center;
     text-align: center;
 }
+
 .hero-content {
     background: rgba(0, 0, 0, 0.7);
     padding: 20px;
     border-radius: 10px;
+    color: white !important;
 }
- 
+
+.hero-content h1, 
+.hero-content p {
+    color: white !important;
+}
+
 .cta-button {
     display: inline-block;
     padding: 10px 20px;
     background: #8B0000;
-    color: white;
+    color: white !important;
     text-decoration: none;
     border-radius: 5px;
     margin-top: 10px;
 }
- 
+
 section {
     padding: 50px 20px;
     text-align: center;
 }
- 
+
+section h2, 
+section p {
+    color: white !important;
+}
+
 footer {
     background: #8B0000;
     padding: 10px;
     text-align: center;
+    color: white !important;
 }
