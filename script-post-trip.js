@@ -1,7 +1,6 @@
 // Import Firebase Modules
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -22,9 +21,8 @@ if (!getApps().length) {
     app = getApps()[0];
 }
 
-// Initialize Firestore & Storage
+// Initialize Firestore
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 // Wait for DOM to Load
 document.addEventListener("DOMContentLoaded", function () {
@@ -60,8 +58,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // Collect form data
         const title = document.getElementById("title").value.trim();
         const story = document.getElementById("story").value.trim();
-        const fileInput = document.getElementById("photo");
-        const file = fileInput.files[0];
 
         // Validate input fields
         if (!title || !story) {
@@ -75,18 +71,10 @@ document.addEventListener("DOMContentLoaded", function () {
         submitButton.disabled = true;
 
         try {
-            let imageURL = "";
-            if (file) {
-                const storageRef = ref(storage, `stories/${file.name}`);
-                const uploadTask = await uploadBytesResumable(storageRef, file);
-                imageURL = await getDownloadURL(uploadTask.ref);
-            }
-
             // Store the story in Firestore
             await addDoc(collection(db, "stories"), {
                 title,
                 story,
-                imageURL,
                 timestamp: serverTimestamp()
             });
 
