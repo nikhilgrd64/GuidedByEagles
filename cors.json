@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://nikhilgrd64.github.io"],
+    "method": ["GET", "POST", "PUT", "DELETE"],
+    "responseHeader": ["Content-Type"],
+    "maxAgeSeconds": 3600
+  }
+]
