@@ -1,3 +1,16 @@
+// Alternate Route Display Handling
+const alternateRouteResult = document.getElementById("alternateRouteResult");
+
+function updateAlternateRoute(route) {
+    if (route && route.trim() !== "") {
+        alternateRouteResult.textContent = `🚗 Alternate route: ${route}`;
+        alternateRouteResult.style.display = "inline-block"; // Show when route exists
+    } else {
+        alternateRouteResult.style.display = "none"; // Hide when empty
+    }
+}
+
+
 // Smooth Scrolling for Navigation
 document.querySelectorAll('nav ul li a').forEach(anchor => {
     anchor.addEventListener('click', function(event) {
@@ -117,6 +130,53 @@ const featuredRoutes = {
     "🌲Dibang Valley": "🚗 Roing → Mayudia Pass → Dibang Valley"
 };
 
+const alternateRoutes = {
+    "🏔️Himalayas": "🚗 Srinagar → Sonmarg → Drass → Kargil → Leh",
+    "🏜️Rajasthan": "🚗 Udaipur → Mount Abu → Jodhpur → Bikaner → Jaipur",
+    "🏝️Goa": "🚗 Margao → Palolem → Colva → Panjim → Vagator",
+    "🌿Kerala": "🚗 Trivandrum → Varkala → Kollam → Kochi → Wayanad",
+    "⛰️Ladakh": "🚗 Manali → Keylong → Jispa → Sarchu → Leh",
+    "🌄Sikkim": "🚗 Siliguri → Pelling → Ravangla → Gangtok",
+    "🏖️Andaman & Nicobar Islands": "🚗 Neil Island → Rangat → Baratang → Ross Island",
+    "🌲North-East India": "🚗 Dimapur → Kohima → Mokokchung → Ziro",
+    "🛕Uttarakhand": "🚗 Haridwar → Rishikesh → Devprayag → Auli",
+    "❄️Kashmir": "🚗 Jammu → Patnitop → Pahalgam → Gulmarg",
+    "☁️Meghalaya": "🚗 Tura → Mawsynram → Dawki → Nongriat",
+    "🏔️Spiti Valley": "🚗 Shimla → Reckong Peo → Kaza → Kibber",
+    "⛰️Zanskar Valley": "🚗 Leh → Lamayuru → Rangdum → Padum",
+    "🌴Majuli Island": "🚗 Tezpur → Kaziranga → Jorhat → Majuli",
+    "🌋Lonar Crater": "🚗 Aurangabad → Daulatabad → Lonar → Ajanta",
+    "🗻Sandakphu": "🚗 Siliguri → Darjeeling → Manebhanjan → Sandakphu",
+    "🙏Tawang": "🚗 Itanagar → Bomdila → Dirang → Tawang",
+    "🏚️Dhanushkodi": "🚗 Rameswaram → Devipattinam → Dhanushkodi",
+    "🌊Gokarna": "🚗 Karwar → Om Beach → Kudle Beach → Gokarna",
+    "🏛️Hampi": "🚗 Hubli → Badami → Aihole → Pattadakal → Hampi",
+    "🌲Chopta": "🚗 Rudraprayag → Ukhimath → Tungnath → Chopta",
+    "🌸Valley of Flowers": "🚗 Rishikesh → Karnaprayag → Joshimath → Valley of Flowers",
+    "🌄Khajjiar": "🚗 Chamba → Dalhousie → Khajjiar → Dharamshala",
+    "🏔️Munsiyari": "🚗 Pithoragarh → Munsiyari → Chaukori → Almora",
+    "🏕️Shillong": "🚗 Cherrapunji → Nongriat → Mawlynnong → Shillong",
+    "🏰Mandu": "🚗 Ujjain → Maheshwar → Mandu → Indore",
+    "🌳Majkhali": "🚗 Almora → Binsar → Majkhali → Ranikhet",
+    "🛕Bhimashankar": "🚗 Lonavala → Matheran → Bhimashankar",
+    "🌊Chandipur": "🚗 Konark → Puri → Bhubaneswar → Chandipur",
+    "🌊Hogenakkal": "🚗 Mysore → Male Mahadeshwara Hills → Hogenakkal",
+    "🌿Ziro Valley": "🚗 Dibrugarh → Pasighat → Ziro",
+    "🏞️Mukteshwar": "🚗 Nainital → Mukteshwar → Sitla → Bhowali",
+    "🌄Lepchajagat": "🚗 Darjeeling → Mirik → Lepchajagat → Kurseong",
+    "🌊Pangong Lake": "🚗 Leh → Tangste → Pangong Lake → Hanle",
+    "🏡Malana": "🚗 Bhuntar → Kasol → Malana → Tosh",
+    "🍃Araku Valley": "🚗 Vizag → Borra Caves → Araku → Lambasingi",
+    "🏕️Kanatal": "🚗 Dehradun → Mussoorie → Kanatal → Dhanaulti",
+    "🌿Mawlynnong": "🚗 Shillong → Mawphlang → Mawlynnong → Dawki",
+    "⛰️Laitlum Canyon": "🚗 Shillong → Jowai → Laitlum Canyon → Smit",
+    "🔥Agnee Kund": "🚗 Omkareshwar → Ujjain → Agnee Kund",
+    "🏔️Gurez Valley": "🚗 Bandipora → Razdan Pass → Dawar → Gurez Valley",
+    "🪂Bir Billing": "🚗 Palampur → Baijnath → Bir → Billing",
+    "🌳Patalkot": "🚗 Chhindwara → Tamia → Patalkot → Panchmarhi",
+    "🌲Dibang Valley": "🚗 Roing → Anini → Dibang Valley → Mayudia Pass"
+};
+
 
 // Function to get the best time to visit a destination
 function getBestTime() {
@@ -137,16 +197,19 @@ function getFeaturedRoute() {
     let routeDropdown = document.getElementById("routeSelect");
     let selectedDestination = routeDropdown.value;
     let routeResult = document.getElementById("routeResult");
+    let alternateRouteResult = document.getElementById("alternateRouteResult");
 
     if (selectedDestination === "") {
-        // When "Let's Travel" is selected, show the default message
         routeResult.innerText = "Best route varies. Please check destination-specific guides.";
+        alternateRouteResult.innerText = "";
     } else if (featuredRoutes[selectedDestination]) {
-        // If a valid destination is selected, show its route
         routeResult.innerText = `Recommended route for ${selectedDestination}: ${featuredRoutes[selectedDestination]}`;
+        alternateRouteResult.innerText = alternateRoutes[selectedDestination] 
+            ? `🚗 Alternate route: ${alternateRoutes[selectedDestination]}` 
+            : "No alternate route available.";
     } else {
-        // If no matching route is found (shouldn't happen with correct dropdown values)
         routeResult.innerText = "Route details not available. Please check specific travel guides.";
+        alternateRouteResult.innerText = "";
     }
 }
 
@@ -173,4 +236,3 @@ document.addEventListener("DOMContentLoaded", () => {
         routeDropdown.appendChild(option);
     });
 });
-
