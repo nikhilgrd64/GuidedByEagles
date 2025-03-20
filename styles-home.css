@@ -161,6 +161,22 @@ p#routeResult {
     display: inline-block;
 }
 
+/* Alternate Route Styling */
+p#alternateRouteResult {
+    display: none; /* Hide by default */
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 5px;
+    background: rgba(255, 165, 0, 0.2); /* Light Orange Background */
+    color: #f39c12; /* Orange Text */
+    display: inline-block;
+}
+
+
+
+
 /* Footer */
 footer {
     background: #8B0000;
