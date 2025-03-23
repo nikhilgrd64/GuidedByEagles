@@ -188,68 +188,89 @@ const alternateRoutes = {
     "🌲Dibang Valley": "🚗 Roing → Anini → Dibang Valley → Mayudia Pass"
 };
 
-// Function to show categories in dropdown initially
-function populateInitialDropdown() {
+function handleSelection() {
     let dropdown = document.getElementById("destinationSelect");
-    dropdown.innerHTML = `
-        <option value="">Choose a Category</option>
-        <option value="wellKnown">🏕️ Well-Known - Select a Destination</option>
-        <option value="lesserKnown">🌿 Lesser-Known - Select a Destination</option>
-        <option value="hiddenGems">🌿 Hidden & Unexplored Gems - Select a Destination</option>
-    `;
+    let bestTimeResult = document.getElementById("bestTimeResult");
+    let selectedValue = dropdown.value;
+
+    // ✅ Reset best time and update destinations when category is selected
+    if (selectedValue === "wellKnown" || selectedValue === "lesserKnown" || selectedValue === "hiddenGems") {
+        bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
+        populateDestinations(selectedValue);
+        return; // ✅ Stop here to avoid unintended execution
+    }
+
+    // ✅ Reset when going back to category selection
+    if (selectedValue === "back") {
+        populateInitialDropdown();
+        bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
+        return;
+    }
+
+    // ✅ Show best time for selected destination
+    showBestTime(selectedValue);
 }
 
 
-// Function to handle dropdown selection
-function handleSelection() {
-    let dropdown = document.getElementById("destinationSelect");
-    let bestTimeResult = document.getElementById("bestTimeResult"); // ✅ Get Best Time display
-    let selectedValue = dropdown.value;
+// Function to populate destinations based on selected category
+function populateDestinations() {
+    let categoryDropdown = document.getElementById("categorySelect");
+    let destinationDropdown = document.getElementById("destinationSelect");
+    let bestTimeResult = document.getElementById("bestTimeResult");
 
-   // ✅ Reset output whenever selection changes
+    let selectedCategory = categoryDropdown.value;
+
+    // ✅ Reset best time when category changes
     bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
-    
-    if (selectedValue === "back") {
-        populateInitialDropdown(); // ✅ Go back to category selection
-        bestTimeResult.innerText = "Best time varies. Please check destination-specific guides."; // ✅ Reset text
-    } else if (travelSeasons[selectedValue]) {
-        populateDestinations(selectedValue); // ✅ Now updates destinations properly
-    } else {
-        showBestTime(selectedValue); // ✅ If it's a destination, show best time
+
+    // ✅ Reset destination dropdown
+    destinationDropdown.innerHTML = `
+        <option value="" disabled selected>Choose a Destination</option>
+    `;
+
+    // ✅ Populate destinations if a valid category is selected
+    if (selectedCategory && travelSeasons[selectedCategory]) {
+        Object.keys(travelSeasons[selectedCategory]).forEach(destination => {
+            let option = document.createElement("option");
+            option.value = destination;
+            option.textContent = destination;
+            destinationDropdown.appendChild(option);
+        });
     }
 }
 
-// Function to populate destinations based on selected category
-function populateDestinations(category) {
-    let dropdown = document.getElementById("destinationSelect");
-
-    // Store selected category as the first option to keep it visible
-    dropdown.innerHTML = `
-        <option value="${category}" selected>${dropdown.options[dropdown.selectedIndex].text}</option>
-        <option value="back">⬅️ Go Back</option>
-    `;
-
-    Object.keys(travelSeasons[category]).forEach((place) => {
-        let option = document.createElement("option");
-        option.value = place;
-        option.textContent = place;
-        dropdown.appendChild(option);
-    });
-}
-
-// Function to display best time when a destination is selected
-function showBestTime(destination) {
+// ✅ Function to display the best time to visit based on selected destination
+function showBestTime() {
+    let destinationDropdown = document.getElementById("destinationSelect");
     let bestTimeResult = document.getElementById("bestTimeResult");
+    let selectedDestination = destinationDropdown.value;
+
+    // ✅ Reset best time if no valid destination is selected
+    bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
 
     for (const category in travelSeasons) {
-        if (travelSeasons[category][destination]) {
-            bestTimeResult.innerText = `📅 Best time to visit ${destination}: ${travelSeasons[category][destination]}`;
+        if (travelSeasons[category][selectedDestination]) {
+            bestTimeResult.innerText = `📅 Best time to visit ${selectedDestination}: ${travelSeasons[category][selectedDestination]}`;
             return;
         }
     }
-
-    bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
 }
+
+
+// Populate the route selection dropdown
+document.addEventListener("DOMContentLoaded", () => {
+    let routeDropdown = document.getElementById("routeSelect");
+
+    routeDropdown.innerHTML = '<option value="">🚀🔥 Let\'s Travel 🚀🔥</option>';
+    Object.keys(travelSeasons).forEach(category => {
+        Object.keys(travelSeasons[category]).forEach(destination => {
+            let option = document.createElement("option");
+            option.value = destination;
+            option.textContent = destination;
+            routeDropdown.appendChild(option);
+        });
+    });
+});
 
 // Function to get the featured route for a destination
 function getFeaturedRoute() {
@@ -257,149 +278,35 @@ function getFeaturedRoute() {
     let routeResult = document.getElementById("routeResult");
     let alternateRouteResult = document.getElementById("alternateRouteResult");
 
+    // When "Let's Travel" is selected, reset to default message
+    if (selectedDestination === "") {
+        routeResult.innerText = "Best route varies. Please check destination-specific guides.";
+        alternateRouteResult.innerText = "Select a destination for alternate route.";
+        alternateRouteResult.style.display = "block"; // Ensure it remains visible
+        return;
+    }
+
     // Check if the selected destination has a main route
     if (featuredRoutes[selectedDestination]) {
-        routeResult.innerText = `🚗 Recommended route for ${selectedDestination}: ${featuredRoutes[selectedDestination]}`;
+        routeResult.innerText = `🚗 Recommended route: ${featuredRoutes[selectedDestination]}`;
     } else {
         routeResult.innerText = "Route details not available.";
     }
+
 
     // Check if the selected destination has an alternate route
     if (alternateRoutes[selectedDestination]) {
         alternateRouteResult.innerText = `🚗 Alternate route: ${alternateRoutes[selectedDestination]}`;
         alternateRouteResult.style.display = "block"; // Ensure visibility
     } else {
-        alternateRouteResult.innerText = "";
-        alternateRouteResult.style.display = "none"; // Hide if no alternate route
+        alternateRouteResult.innerText = "Select a destination for alternate route.";
+        alternateRouteResult.style.display = "block"; //  Keep it visible
     }
 }
-
-let map;
-let routingControl;
-
-// Initialize OpenStreetMap
-function initMap() {
-    map = L.map('map').setView([20.5937, 78.9629], 6); // Default: India
-
-    // Add OpenStreetMap Tile Layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-}
-
-// Function to get the selected route and update map
-function getFeaturedRoute() {
-    let selectedDestination = document.getElementById("routeSelect").value;
-    let routeResult = document.getElementById("routeResult");
-    let alternateRouteResult = document.getElementById("alternateRouteResult");
-
-    if (featuredRoutes[selectedDestination]) {
-        routeResult.innerText = `🚗 Recommended route: ${featuredRoutes[selectedDestination]}`;
-        updateRoute(featuredRoutes[selectedDestination]);
-    } else {
-        routeResult.innerText = "Route details not available.";
-    }
-
-    if (alternateRoutes[selectedDestination]) {
-        alternateRouteResult.innerText = `🚗 Alternate route: ${alternateRoutes[selectedDestination]}`;
-        alternateRouteResult.style.display = "block";
-    } else {
-        alternateRouteResult.innerText = "";
-        alternateRouteResult.style.display = "none";
-    }
-}
-
-// Function to update the map with the selected route
-function updateRoute(routeString) {
-    let places = routeString.replace(/🚗/g, "").split(" → ").map(place => place.trim());
-
-    if (places.length < 2) {
-        console.error("Not enough valid waypoints found.");
-        return;
-    }
-
-    // Remove existing route if present
-    if (routingControl) {
-        map.removeControl(routingControl);
-    }
-
-    let waypoints = [];
-
-    // Fetch coordinates for the locations
-    let fetchPromises = places.map(place =>
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${place}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.length > 0) {
-                let lat = parseFloat(data[0].lat);
-                let lon = parseFloat(data[0].lon);
-                waypoints.push(L.latLng(lat, lon));
-            }
-        })
-    );
-
-    // Wait for all fetch requests to complete before creating the route
-    Promise.all(fetchPromises).then(() => {
-        if (waypoints.length < 2) {
-            console.error("Not enough valid waypoints found.");
-            return;
-        }
-
-        routingControl = L.Routing.control({
-            waypoints: waypoints,
-            routeWhileDragging: true,
-            createMarker: function (i, waypoint, n) {
-                return L.marker(waypoint.latLng).bindPopup(places[i]);
-            }
-        }).addTo(map);
-
-        // Generate Google Maps Link
-        generateGoogleMapsLink(waypoints);
-    }).catch(error => console.error("Error fetching route data:", error));
-}
-
-// Function to Generate Google Maps Link
-function generateGoogleMapsLink(waypoints) {
-    if (waypoints.length < 2) return;
-
-    let start = waypoints[0];
-    let end = waypoints[waypoints.length - 1];
-
-    let googleMapsLink = `https://www.google.com/maps/dir/${start.lat},${start.lng}/${end.lat},${end.lng}`;
-
-    // Remove existing button if any
-    let existingButton = document.getElementById("googleMapsButton");
-    if (existingButton) {
-        existingButton.remove();
-    }
-
-    // Create Google Maps Button
-    let button = document.createElement("button");
-    button.id = "googleMapsButton";
-    button.innerHTML = "Open in Google Maps";
-    button.style.margin = "10px";
-    button.style.padding = "5px 10px";
-    button.style.background = "#007bff";
-    button.style.color = "white";
-    button.style.border = "none";
-    button.style.cursor = "pointer";
-    button.onclick = function () {
-        window.open(googleMapsLink, "_blank");
-    };
-
-    // Append Button to Routing Panel
-    let routingContainer = document.querySelector(".leaflet-routing-container");
-    if (routingContainer) {
-        routingContainer.appendChild(button);
-    }
-}
-
-// Initialize the map on page load
-document.addEventListener("DOMContentLoaded", initMap);
 
 // Run on page load
 document.addEventListener("DOMContentLoaded", () => {
-    populateInitialDropdown(); // ✅ Show categories first
+    populateDestinations(); // ✅ Show categories first
 
     let routeDropdown = document.getElementById("routeSelect");
 
@@ -413,4 +320,9 @@ document.addEventListener("DOMContentLoaded", () => {
         option.textContent = place;
         routeDropdown.appendChild(option);
     });
+
+    // ✅ Ensure correct default messages on page load
+    document.getElementById("routeResult").innerText = "Best route varies. Please check destination-specific guides.";
+    document.getElementById("alternateRouteResult").innerText = "Select a destination for alternate route.";
+    document.getElementById("alternateRouteResult").style.display = "block"; // Ensure visibility
 });
