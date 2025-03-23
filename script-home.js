@@ -1,27 +1,9 @@
-// Alternate Route Display Handling
-const alternateRouteResult = document.getElementById("alternateRouteResult");
 
-function updateAlternateRoute(route) {
-    let alternateRouteResult = document.getElementById("alternateRouteResult");
-
-    if (route && route.trim() !== "") {
-        alternateRouteResult.textContent = `🚗 Alternate route: ${route}`;
-        alternateRouteResult.classList.add("show"); // ✅ Now shows when updated
-    } else {
-        alternateRouteResult.classList.remove("show"); // ✅ Hide when empty
-    }
-}
-
-
-// Smooth Scrolling for Navigation
+// ✅ Smooth Scrolling for Navigation
 document.querySelectorAll('nav ul li a').forEach(anchor => {
     anchor.addEventListener('click', function(event) {
         const href = this.getAttribute('href');
-
-        // Ignore external links (e.g., "trip-planning.html")
-        if (!href.startsWith("#")) {
-            return;
-        }
+        if (!href.startsWith("#")) return;
 
         const target = document.querySelector(href);
         if (target) {
@@ -30,6 +12,7 @@ document.querySelectorAll('nav ul li a').forEach(anchor => {
         }
     });
 });
+
 
 // Destination-based best time recommendations
 const travelSeasons = {
@@ -92,7 +75,6 @@ const travelSeasons = {
     }
 };
 
-
 // Destination-based featured routes
 const featuredRoutes = {    
     "🏔️Himalayas": "🚗 Manali → Leh → Pangong Lake → Nubra Valley → Srinagar",
@@ -141,78 +123,189 @@ const featuredRoutes = {
     "🌲Dibang Valley": "🚗 Roing → Mayudia Pass → Dibang Valley"
 };
 
+// Alternate Routes - Now Stored as Arrays
 const alternateRoutes = {
-    "🏔️Himalayas": "🚗 Srinagar → Sonmarg → Drass → Kargil → Leh",
-    "🏜️Rajasthan": "🚗 Udaipur → Mount Abu → Jodhpur → Bikaner → Jaipur",
-    "🏝️Goa": "🚗 Margao → Palolem → Colva → Panjim → Vagator",
-    "🌿Kerala": "🚗 Trivandrum → Varkala → Kollam → Kochi → Wayanad",
-    "⛰️Ladakh": "🚗 Manali → Keylong → Jispa → Sarchu → Leh",
-    "🌄Sikkim": "🚗 Siliguri → Pelling → Ravangla → Gangtok",
-    "🏖️Andaman & Nicobar Islands": "🚗 Neil Island → Rangat → Baratang → Ross Island",
-    "🌲North-East India": "🚗 Dimapur → Kohima → Mokokchung → Ziro",
-    "🛕Uttarakhand": "🚗 Haridwar → Rishikesh → Devprayag → Auli",
-    "❄️Kashmir": "🚗 Jammu → Patnitop → Pahalgam → Gulmarg",
-    "☁️Meghalaya": "🚗 Tura → Mawsynram → Dawki → Nongriat",
-    "🏔️Spiti Valley": "🚗 Shimla → Reckong Peo → Kaza → Kibber",
-    "⛰️Zanskar Valley": "🚗 Leh → Lamayuru → Rangdum → Padum",
-    "🌴Majuli Island": "🚗 Tezpur → Kaziranga → Jorhat → Majuli",
-    "🌋Lonar Crater": "🚗 Aurangabad → Daulatabad → Lonar → Ajanta",
-    "🗻Sandakphu": "🚗 Siliguri → Darjeeling → Manebhanjan → Sandakphu",
-    "🙏Tawang": "🚗 Itanagar → Bomdila → Dirang → Tawang",
-    "🏚️Dhanushkodi": "🚗 Rameswaram → Devipattinam → Dhanushkodi",
-    "🌊Gokarna": "🚗 Karwar → Om Beach → Kudle Beach → Gokarna",
-    "🏛️Hampi": "🚗 Hubli → Badami → Aihole → Pattadakal → Hampi",
-    "🌲Chopta": "🚗 Rudraprayag → Ukhimath → Tungnath → Chopta",
-    "🌸Valley of Flowers": "🚗 Rishikesh → Karnaprayag → Joshimath → Valley of Flowers",
-    "🌄Khajjiar": "🚗 Chamba → Dalhousie → Khajjiar → Dharamshala",
-    "🏔️Munsiyari": "🚗 Pithoragarh → Munsiyari → Chaukori → Almora",
-    "🏕️Shillong": "🚗 Cherrapunji → Nongriat → Mawlynnong → Shillong",
-    "🏰Mandu": "🚗 Ujjain → Maheshwar → Mandu → Indore",
-    "🌳Majkhali": "🚗 Almora → Binsar → Majkhali → Ranikhet",
-    "🛕Bhimashankar": "🚗 Lonavala → Matheran → Bhimashankar",
-    "🌊Chandipur": "🚗 Konark → Puri → Bhubaneswar → Chandipur",
-    "🌊Hogenakkal": "🚗 Mysore → Male Mahadeshwara Hills → Hogenakkal",
-    "🌿Ziro Valley": "🚗 Dibrugarh → Pasighat → Ziro",
-    "🏞️Mukteshwar": "🚗 Nainital → Mukteshwar → Sitla → Bhowali",
-    "🌄Lepchajagat": "🚗 Darjeeling → Mirik → Lepchajagat → Kurseong",
-    "🌊Pangong Lake": "🚗 Leh → Tangste → Pangong Lake → Hanle",
-    "🏡Malana": "🚗 Bhuntar → Kasol → Malana → Tosh",
-    "🍃Araku Valley": "🚗 Vizag → Borra Caves → Araku → Lambasingi",
-    "🏕️Kanatal": "🚗 Dehradun → Mussoorie → Kanatal → Dhanaulti",
-    "🌿Mawlynnong": "🚗 Shillong → Mawphlang → Mawlynnong → Dawki",
-    "⛰️Laitlum Canyon": "🚗 Shillong → Jowai → Laitlum Canyon → Smit",
-    "🔥Agnee Kund": "🚗 Omkareshwar → Ujjain → Agnee Kund",
-    "🏔️Gurez Valley": "🚗 Bandipora → Razdan Pass → Dawar → Gurez Valley",
-    "🪂Bir Billing": "🚗 Palampur → Baijnath → Bir → Billing",
-    "🌳Patalkot": "🚗 Chhindwara → Tamia → Patalkot → Panchmarhi",
-    "🌲Dibang Valley": "🚗 Roing → Anini → Dibang Valley → Mayudia Pass"
+    "🏔️Himalayas": [
+        "🚗 Srinagar → Sonmarg → Drass → Kargil → Leh",
+        "🚗 Delhi → Shimla → Kinnaur → Spiti → Leh"
+    ],
+     "🏜️Rajasthan": [
+        "🚗 Udaipur → Mount Abu → Jodhpur → Bikaner → Jaipur",
+        "🚗 Delhi → Jaipur → Jaisalmer → Jodhpur → Udaipur"
+    ],
+     "🏝️Goa": [
+        "🚗 Margao → Palolem → Colva → Panjim → Vagator",
+        "🚗 Pune → Amboli Ghat → Goa"
+    ],
+    "🌿Kerala": [
+        "🚗 Trivandrum → Varkala → Kollam → Kochi → Wayanad",
+        "🚗 Calicut → Wayanad → Munnar → Thekkady"
+    ],
+    "⛰️Ladakh": [
+        "🚗 Manali → Keylong → Jispa → Sarchu → Leh",
+        "🚗 Srinagar → Kargil → Leh → Pangong"
+    ],
+     "🌄Sikkim": [
+        "🚗 Siliguri → Pelling → Ravangla → Gangtok",
+        "🚗 Darjeeling → Namchi → Gangtok"
+    ],
+    "🏖️Andaman & Nicobar Islands": [
+        "🚗 Neil Island → Rangat → Baratang → Ross Island",
+        "🚗 Havelock → North Bay → Port Blair"
+    ],
+    "🌲North-East India": [
+        "🚗 Dimapur → Kohima → Mokokchung → Ziro",
+        "🚗 Guwahati → Kaziranga → Majuli → Ziro"
+    ],
+    "🛕Uttarakhand": [
+        "🚗 Dehradun → Mussoorie → Tehri → Auli → Kedarnath",
+        "🚗 Haridwar → Rishikesh → Devprayag → Chopta → Kedarnath"
+    ],
+    "❄️Kashmir": [
+        "🚗 Jammu → Patnitop → Pahalgam → Gulmarg → Srinagar",
+        "🚗 Srinagar → Baramulla → Kupwara → Keran → Pahalgam"
+    ],
+    "☁️Meghalaya": [
+        "🚗 Guwahati → Nongpoh → Shillong → Mawlynnong → Dawki",
+        "🚗 Shillong → Jowai → Krangsuri Falls → Dawki → Mawlynnong"
+    ],
+    "🏔️Spiti Valley": [
+        "🚗 Shimla → Reckong Peo → Nako → Kaza → Pin Valley",
+        "🚗 Manali → Rohtang Pass → Kunzum Pass → Kaza → Dhankar"
+    ],
+    "⛰️Zanskar Valley": [
+        "🚗 Leh → Lamayuru → Rangdum → Padum → Phugtal Monastery",
+        "🚗 Kargil → Suru Valley → Rangdum → Zangla → Padum"
+    ],
+    "🌴Majuli Island": [
+        "🚗 Jorhat → Nimati Ghat → Majuli Island → Garmur → Sivasagar",
+        "🚗 Guwahati → Kaziranga → Jorhat → Majuli Island → Sivasagar"
+    ],
+    "🌋Lonar Crater": [
+        "🚗 Aurangabad → Daulatabad → Ellora → Ajanta → Lonar Crater",
+        "🚗 Pune → Ahmednagar → Aurangabad → Ajanta → Lonar"
+    ],
+    "🗻Sandakphu": [
+        "🚗 Siliguri → Mirik → Manebhanjan → Sandakphu",
+        "🚗 Darjeeling → Tumling → Kalipokhri → Sandakphu"
+    ],
+    "🙏Tawang": [
+        "🚗 Guwahati → Tezpur → Bomdila → Dirang → Tawang",
+        "🚗 Itanagar → Ziro → Seppa → Bomdila → Tawang"
+    ],
+    "🏚️Dhanushkodi": [
+        "🚗 Rameswaram → Pamban Bridge → Dhanushkodi → Arichal Munai",
+        "🚗 Madurai → Ramanathapuram → Rameswaram → Dhanushkodi"
+    ],
+    "🌊Gokarna": [
+        "🚗 Hubli → Sirsi → Kumta → Gokarna",
+        "🚗 Karwar → Om Beach → Kudle Beach → Gokarna"
+    ],
+    "🏛️Hampi": [
+        "🚗 Hubli → Gadag → Badami → Aihole → Pattadakal → Hampi",
+        "🚗 Bangalore → Chitradurga → Hospet → Hampi"
+    ],
+    "🌲Chopta": [
+        "🚗 Rishikesh → Devprayag → Rudraprayag → Chopta",
+        "🚗 Haridwar → Srinagar → Ukhimath → Chopta"
+    ],
+    "🌸Valley of Flowers": [
+        "🚗 Rishikesh → Joshimath → Govindghat → Hemkund Sahib → Valley of Flowers",
+        "🚗 Haridwar → Devprayag → Karnaprayag → Ghangaria → Valley of Flowers"
+    ],
+    "🌄Khajjiar": [
+        "🚗 Pathankot → Dalhousie → Khajjiar → Chamba",
+        "🚗 Amritsar → Dharamshala → Dalhousie → Khajjiar"
+    ],
+    "🏔️Munsiyari": [
+        "🚗 Almora → Binsar → Chaukori → Munsiyari",
+        "🚗 Pithoragarh → Dharchula → Munsiyari"
+    ],
+    "🏕️Shillong": [
+        "🚗 Guwahati → Nongpoh → Shillong → Laitlum → Dawki",
+        "🚗 Shillong → Cherrapunji → Mawlynnong → Dawki"
+    ],
+    "🏰Mandu": [
+        "🚗 Indore → Maheshwar → Omkareshwar → Mandu",
+        "🚗 Ujjain → Dewas → Indore → Mandu"
+    ],
+    "🌳Majkhali": [
+        "🚗 Almora → Ranikhet → Majkhali",
+        "🚗 Nainital → Bhowali → Ranikhet → Majkhali"
+    ],
+    "🛕Bhimashankar": [
+        "🚗 Pune → Rajgurunagar → Bhimashankar → Matheran",
+        "🚗 Mumbai → Lonavala → Karjat → Bhimashankar"
+    ],
+    "🌊Chandipur": [
+        "🚗 Bhubaneswar → Puri → Konark → Chandipur",
+        "🚗 Cuttack → Jajpur → Bhadrak → Chandipur"
+    ],
+    "🌊Hogenakkal": [
+        "🚗 Bangalore → Hosur → Denkanikottai → Hogenakkal",
+        "🚗 Salem → Mettur → Hogenakkal"
+    ],
+    "🌿Ziro Valley": [
+        "🚗 Itanagar → Ziro Valley → Daporijo",
+        "🚗 Dibrugarh → Pasighat → Along → Ziro Valley"
+    ],
+    "🏞️Mukteshwar": [
+        "🚗 Nainital → Bhimtal → Mukteshwar",
+        "🚗 Almora → Binsar → Mukteshwar"
+    ],
+    "🌄Lepchajagat": [
+        "🚗 Darjeeling → Jorpokhri → Lepchajagat → Mirik",
+        "🚗 Siliguri → Kurseong → Ghoom → Lepchajagat"
+    ],
+    "🌊Pangong Lake": [
+        "🚗 Leh → Chang La → Pangong Lake",
+        "🚗 Leh → Hemis → Tso Moriri → Pangong Lake"
+    ],
+     "🏡Malana": [
+        "🚗 Bhuntar → Kasol → Malana → Tosh",
+        "🚗 Manali → Naggar → Malana → Tosh"
+    ],
+    "🍃Araku Valley": [
+        "🚗 Visakhapatnam → Simhachalam → Borra Caves → Araku Valley",
+        "🚗 Vizag → Lambasingi → Araku"
+    ],
+     
+    "🏕️Kanatal": [
+        "🚗 Dehradun → Mussoorie → Kanatal → Dhanaulti",
+        "🚗 Rishikesh → Tehri → Kanatal"
+    ],
+    "🌿Mawlynnong": [
+        "🚗 Shillong → Sohra → Mawlynnong → Dawki",
+        "🚗 Guwahati → Nongpoh → Shillong → Mawlynnong"
+    ],
+    "⛰️Laitlum Canyon": [
+        "🚗 Shillong → Jowai → Laitlum Canyon → Smit",
+        "🚗 Shillong → Mawphlang → Laitlum Canyon"
+    ],
+    "🔥Agnee Kund": [
+        "🚗 Omkareshwar → Ujjain → Agnee Kund",
+        "🚗 Indore → Dewas → Omkareshwar → Agnee Kund"
+    ],
+    "🏔️Gurez Valley": [
+        "🚗 Srinagar → Bandipora → Gurez Valley",
+        "🚗 Baramulla → Kupwara → Dawar → Gurez Valley"
+    ],
+    "🪂Bir Billing": [
+        "🚗 Mandi → Baijnath → Bir → Billing",
+        "🚗 Dharamshala → Palampur → Bir Billing"
+    ],
+    "🌳Patalkot": [
+        "🚗 Chhindwara → Tamia → Patalkot",
+        "🚗 Nagpur → Seoni → Patalkot"
+    ],
+    "🌲Dibang Valley": [
+        "🚗 Dibrugarh → Roing → Mayudia Pass → Dibang Valley",
+        "🚗 Itanagar → Pasighat → Roing → Dibang Valley"
+    ]
 };
 
-function handleSelection() {
-    let dropdown = document.getElementById("destinationSelect");
-    let bestTimeResult = document.getElementById("bestTimeResult");
-    let selectedValue = dropdown.value;
 
-    // ✅ Reset best time and update destinations when category is selected
-    if (selectedValue === "wellKnown" || selectedValue === "lesserKnown" || selectedValue === "hiddenGems") {
-        bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
-        populateDestinations(selectedValue);
-        return; // ✅ Stop here to avoid unintended execution
-    }
-
-    // ✅ Reset when going back to category selection
-    if (selectedValue === "back") {
-        populateInitialDropdown();
-        bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
-        return;
-    }
-
-    // ✅ Show best time for selected destination
-    showBestTime(selectedValue);
-}
-
-
-// Function to populate destinations based on selected category
+// ✅ Function to populate destinations based on category selection
 function populateDestinations() {
     let categoryDropdown = document.getElementById("categorySelect");
     let destinationDropdown = document.getElementById("destinationSelect");
@@ -220,15 +313,12 @@ function populateDestinations() {
 
     let selectedCategory = categoryDropdown.value;
 
-    // ✅ Reset best time when category changes
+    // ✅ Reset best time message
     bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
 
-    // ✅ Reset destination dropdown
-    destinationDropdown.innerHTML = `
-        <option value="" disabled selected>Choose a Destination</option>
-    `;
+    // ✅ Reset destinations dropdown
+    destinationDropdown.innerHTML = `<option value="" disabled selected>Choose a Destination</option>`;
 
-    // ✅ Populate destinations if a valid category is selected
     if (selectedCategory && travelSeasons[selectedCategory]) {
         Object.keys(travelSeasons[selectedCategory]).forEach(destination => {
             let option = document.createElement("option");
@@ -239,13 +329,12 @@ function populateDestinations() {
     }
 }
 
-// ✅ Function to display the best time to visit based on selected destination
+// ✅ Function to display best time for selected destination
 function showBestTime() {
     let destinationDropdown = document.getElementById("destinationSelect");
     let bestTimeResult = document.getElementById("bestTimeResult");
     let selectedDestination = destinationDropdown.value;
 
-    // ✅ Reset best time if no valid destination is selected
     bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
 
     for (const category in travelSeasons) {
@@ -256,64 +345,44 @@ function showBestTime() {
     }
 }
 
-
-// Populate the route selection dropdown
-document.addEventListener("DOMContentLoaded", () => {
-    let routeDropdown = document.getElementById("routeSelect");
-
-    routeDropdown.innerHTML = '<option value="">🚀🔥 Let\'s Travel 🚀🔥</option>';
-    Object.keys(travelSeasons).forEach(category => {
-        Object.keys(travelSeasons[category]).forEach(destination => {
-            let option = document.createElement("option");
-            option.value = destination;
-            option.textContent = destination;
-            routeDropdown.appendChild(option);
-        });
-    });
-});
-
-// Function to get the featured route for a destination
+    // ✅ Function to get featured & alternate routes for a destination
 function getFeaturedRoute() {
     let selectedDestination = document.getElementById("routeSelect").value;
     let routeResult = document.getElementById("routeResult");
     let alternateRouteResult = document.getElementById("alternateRouteResult");
 
-    // When "Let's Travel" is selected, reset to default message
-    if (selectedDestination === "") {
+    if (!selectedDestination) {
         routeResult.innerText = "Best route varies. Please check destination-specific guides.";
         alternateRouteResult.innerText = "Select a destination for alternate route.";
-        alternateRouteResult.style.display = "block"; // Ensure it remains visible
+        alternateRouteResult.style.display = "block";
         return;
     }
 
-    // Check if the selected destination has a main route
-    if (featuredRoutes[selectedDestination]) {
-        routeResult.innerText = `🚗 Recommended route: ${featuredRoutes[selectedDestination]}`;
-    } else {
-        routeResult.innerText = "Route details not available.";
-    }
+// ✅ Show main route
+routeResult.innerText = featuredRoutes[selectedDestination]
+? `🚗 Recommended route: ${featuredRoutes[selectedDestination]}`
+: "Route details not available.";
 
-
-    // Check if the selected destination has an alternate route
-    if (alternateRoutes[selectedDestination]) {
-        alternateRouteResult.innerText = `🚗 Alternate route: ${alternateRoutes[selectedDestination]}`;
-        alternateRouteResult.style.display = "block"; // Ensure visibility
-    } else {
-        alternateRouteResult.innerText = "Select a destination for alternate route.";
-        alternateRouteResult.style.display = "block"; //  Keep it visible
-    }
+// ✅ Show multiple alternate routes properly
+if (alternateRoutes[selectedDestination]) {
+let formattedRoutes = alternateRoutes[selectedDestination].map(route => `🚗 ${route}`).join("<br>");
+alternateRouteResult.innerHTML = formattedRoutes;
+alternateRouteResult.style.display = "block";
+} else {
+alternateRouteResult.innerText = "Select a destination for alternate route.";
+alternateRouteResult.style.display = "block";
+}
 }
 
-// Run on page load
+// ✅ Ensure correct dropdown behavior on page load
 document.addEventListener("DOMContentLoaded", () => {
-    populateDestinations(); // ✅ Show categories first
+    // ✅ Populate default category
+    populateDestinations();
 
+    // ✅ Populate routes dropdown
     let routeDropdown = document.getElementById("routeSelect");
+    routeDropdown.innerHTML = `<option value="">🚀🔥 Let's Travel 🚀🔥</option>`;
 
-    // Ensure route dropdown starts with the correct placeholder
-    routeDropdown.innerHTML = '<option value="">🚀🔥 Let\'s Travel 🚀🔥</option>';
-
-    // ✅ Populate the routes dropdown correctly
     Object.keys(featuredRoutes).forEach(place => {
         let option = document.createElement("option");
         option.value = place;
@@ -321,8 +390,8 @@ document.addEventListener("DOMContentLoaded", () => {
         routeDropdown.appendChild(option);
     });
 
-    // ✅ Ensure correct default messages on page load
+    // ✅ Set correct default messages
     document.getElementById("routeResult").innerText = "Best route varies. Please check destination-specific guides.";
     document.getElementById("alternateRouteResult").innerText = "Select a destination for alternate route.";
-    document.getElementById("alternateRouteResult").style.display = "block"; // Ensure visibility
+    document.getElementById("alternateRouteResult").style.display = "block";
 });
