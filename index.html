@@ -6,6 +6,15 @@
     <title>Guided by Eagles</title>
     <link rel="stylesheet" href="styles-home.css">
     <script defer src="script-home.js"></script>
+    <!-- Leaflet CSS (Already added, just in case) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<!-- Leaflet Routing Machine (Required for route display) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+     
 </head>
 <body>
     
@@ -66,6 +75,7 @@
             <p id="routeResult">Best route varies. Please check destination-specific guides.</p>
             <h3>Alternate Route</h3>
             <p id="alternateRouteResult"></p>
+            <div id="map"></div>
         </div>
 
     <!-- Prepare for the Road Section -->
