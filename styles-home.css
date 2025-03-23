@@ -185,7 +185,81 @@ p#alternateRouteResult.show {
 }
 
 
+/* Map Styling */
+#map {
+    width: 100%;
+    height: 400px;
+    margin-top: 20px;
+    border-radius: 10px;
+    border: 2px solid #f39c12;
+}
 
+
+/* Ensure all text inside the routing container is black */
+.leaflet-routing-container,
+.leaflet-routing-container * {
+    color: black !important;
+}
+
+/* Ensure the alternative routes text remains black */
+.leaflet-routing-alt,
+.leaflet-routing-alt * {
+    color: black !important;
+}
+
+/* Override any specific styling applied to highway names */
+.leaflet-routing-container .leaflet-routing-instruction {
+    color: black !important;
+}
+
+/* Ensure the step-by-step instructions are black */
+.leaflet-routing-container .leaflet-bar,
+.leaflet-routing-container .leaflet-bar * {
+    color: black !important;
+}
+
+/* Override any link styling if needed */
+.leaflet-routing-container a {
+    color: blue !important; /* Change to black or another visible color */
+}
+
+
+/* Change the background to white and text color to black */
+.leaflet-routing-container {
+    background: rgba(255, 255, 255, 0.95) !important; /* Light background */
+    color: black !important; /* Black text */
+}
+
+/* Ensure the alternative routes are readable */
+.leaflet-routing-alt {
+    background: rgba(240, 240, 240, 0.95) !important; /* Light gray background */
+    color: black !important; /* Black text */
+}
+
+/* Style step-by-step instructions */
+.leaflet-routing-container .leaflet-bar {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* Ensure buttons and links are visible */
+.leaflet-routing-container a {
+    color: blue !important; /* Make links stand out */
+    font-weight: bold;
+}
+
+/* Ensure each step in directions is clearly readable */
+.leaflet-routing-container .leaflet-routing-alt table {
+    background: white !important;
+    color: black !important;
+}
+
+/* Optional: Add border to make it look better */
+.leaflet-routing-container {
+    border: 2px solid #ccc !important;
+    border-radius: 8px !important;
+    padding: 10px;
+}
 
 /* Footer */
 footer {
