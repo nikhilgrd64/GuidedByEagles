@@ -270,6 +270,130 @@ function getFeaturedRoute() {
         alternateRouteResult.style.display = "none"; // Hide if no alternate route
     }
 }
+
+let map;
+let routingControl;
+
+// Initialize OpenStreetMap
+function initMap() {
+    map = L.map('map').setView([20.5937, 78.9629], 6); // Default: India
+
+    // Add OpenStreetMap Tile Layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+}
+
+// Function to get the selected route and update map
+function getFeaturedRoute() {
+    let selectedDestination = document.getElementById("routeSelect").value;
+    let routeResult = document.getElementById("routeResult");
+    let alternateRouteResult = document.getElementById("alternateRouteResult");
+
+    if (featuredRoutes[selectedDestination]) {
+        routeResult.innerText = `🚗 Recommended route: ${featuredRoutes[selectedDestination]}`;
+        updateRoute(featuredRoutes[selectedDestination]);
+    } else {
+        routeResult.innerText = "Route details not available.";
+    }
+
+    if (alternateRoutes[selectedDestination]) {
+        alternateRouteResult.innerText = `🚗 Alternate route: ${alternateRoutes[selectedDestination]}`;
+        alternateRouteResult.style.display = "block";
+    } else {
+        alternateRouteResult.innerText = "";
+        alternateRouteResult.style.display = "none";
+    }
+}
+
+// Function to update the map with the selected route
+function updateRoute(routeString) {
+    let places = routeString.replace(/🚗/g, "").split(" → ").map(place => place.trim());
+
+    if (places.length < 2) {
+        console.error("Not enough valid waypoints found.");
+        return;
+    }
+
+    // Remove existing route if present
+    if (routingControl) {
+        map.removeControl(routingControl);
+    }
+
+    let waypoints = [];
+
+    // Fetch coordinates for the locations
+    let fetchPromises = places.map(place =>
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${place}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length > 0) {
+                let lat = parseFloat(data[0].lat);
+                let lon = parseFloat(data[0].lon);
+                waypoints.push(L.latLng(lat, lon));
+            }
+        })
+    );
+
+    // Wait for all fetch requests to complete before creating the route
+    Promise.all(fetchPromises).then(() => {
+        if (waypoints.length < 2) {
+            console.error("Not enough valid waypoints found.");
+            return;
+        }
+
+        routingControl = L.Routing.control({
+            waypoints: waypoints,
+            routeWhileDragging: true,
+            createMarker: function (i, waypoint, n) {
+                return L.marker(waypoint.latLng).bindPopup(places[i]);
+            }
+        }).addTo(map);
+
+        // Generate Google Maps Link
+        generateGoogleMapsLink(waypoints);
+    }).catch(error => console.error("Error fetching route data:", error));
+}
+
+// Function to Generate Google Maps Link
+function generateGoogleMapsLink(waypoints) {
+    if (waypoints.length < 2) return;
+
+    let start = waypoints[0];
+    let end = waypoints[waypoints.length - 1];
+
+    let googleMapsLink = `https://www.google.com/maps/dir/${start.lat},${start.lng}/${end.lat},${end.lng}`;
+
+    // Remove existing button if any
+    let existingButton = document.getElementById("googleMapsButton");
+    if (existingButton) {
+        existingButton.remove();
+    }
+
+    // Create Google Maps Button
+    let button = document.createElement("button");
+    button.id = "googleMapsButton";
+    button.innerHTML = "Open in Google Maps";
+    button.style.margin = "10px";
+    button.style.padding = "5px 10px";
+    button.style.background = "#007bff";
+    button.style.color = "white";
+    button.style.border = "none";
+    button.style.cursor = "pointer";
+    button.onclick = function () {
+        window.open(googleMapsLink, "_blank");
+    };
+
+    // Append Button to Routing Panel
+    let routingContainer = document.querySelector(".leaflet-routing-container");
+    if (routingContainer) {
+        routingContainer.appendChild(button);
+    }
+}
+
+// Initialize the map on page load
+document.addEventListener("DOMContentLoaded", initMap);
+
 // Run on page load
 document.addEventListener("DOMContentLoaded", () => {
     populateInitialDropdown(); // ✅ Show categories first
