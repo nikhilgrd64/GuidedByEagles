@@ -5,16 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guided by Eagles</title>
     <link rel="stylesheet" href="styles-home.css">
-    <script defer src="script-home.js"></script>
-    <!-- Leaflet CSS (Already added, just in case) -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
-<!-- Leaflet Routing Machine (Required for route display) -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
-<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
-
-     
+    <script defer src="script-home.js"></script>  
 </head>
 <body>
     
@@ -49,15 +40,22 @@
          <div class="best-time">
          <h3>Best Time to Visit</h3>
     
-    <label for="destinationSelect">Category of Journey:</label>
-    <div class="custom-dropdown">
-        <select id="destinationSelect" onchange="handleSelection()">
-            <option value="">Choose a Category</option>
-            <option value="wellKnown">🏕️ Well-Known - Select a Destination</option>
-            <option value="lesserKnown">🌿 Lesser-Known - Select a Destination</option>
-            <option value="hiddenGems">🌿 Hidden & Unexplored Gems - Select a Destination</option>
-        </select>
-    </div>
+    
+         <label for="categorySelect">Category of Your Journey:</label>
+         <div class="custom-dropdown">
+             <select id="categorySelect" onchange="populateDestinations()">
+                 <option value="">Choose a Category</option>
+                 <option value="wellKnown">🏕️ Well-Known</option>
+                 <option value="lesserKnown">🌿 Lesser-Known</option>
+                 <option value="hiddenGems">🌿 Hidden & Unexplored Gems</option>
+             </select>
+         </div>
+         <label for="destinationSelect">Destination of Your Journey:</label>
+            <div class="custom-dropdown">
+                <select id="destinationSelect" onchange="showBestTime()">
+                    <option value="" disabled selected>Choose a Destination</option>
+                </select>
+            </div>
 
     <p id="bestTimeResult">Best time varies. Please check destination-specific guides.</p>
 </div>
@@ -75,7 +73,6 @@
             <p id="routeResult">Best route varies. Please check destination-specific guides.</p>
             <h3>Alternate Route</h3>
             <p id="alternateRouteResult"></p>
-            <div id="map"></div>
         </div>
 
     <!-- Prepare for the Road Section -->
