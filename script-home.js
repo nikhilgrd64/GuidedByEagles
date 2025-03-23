@@ -206,6 +206,9 @@ function handleSelection() {
     let bestTimeResult = document.getElementById("bestTimeResult"); // ✅ Get Best Time display
     let selectedValue = dropdown.value;
 
+   // ✅ Reset output whenever selection changes
+    bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
+    
     if (selectedValue === "back") {
         populateInitialDropdown(); // ✅ Go back to category selection
         bestTimeResult.innerText = "Best time varies. Please check destination-specific guides."; // ✅ Reset text
