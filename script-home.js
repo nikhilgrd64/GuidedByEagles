@@ -2,11 +2,13 @@
 const alternateRouteResult = document.getElementById("alternateRouteResult");
 
 function updateAlternateRoute(route) {
+    let alternateRouteResult = document.getElementById("alternateRouteResult");
+
     if (route && route.trim() !== "") {
         alternateRouteResult.textContent = `🚗 Alternate route: ${route}`;
-        alternateRouteResult.style.display = "inline-block"; // Show when route exists
+        alternateRouteResult.classList.add("show"); // ✅ Now shows when updated
     } else {
-        alternateRouteResult.style.display = "none"; // Hide when empty
+        alternateRouteResult.classList.remove("show"); // ✅ Hide when empty
     }
 }
 
@@ -31,6 +33,9 @@ document.querySelectorAll('nav ul li a').forEach(anchor => {
 
 // Destination-based best time recommendations
 const travelSeasons = {
+
+    wellKnown: {
+    // Well-Known Destinations
     "🏔️Himalayas": "April to June & September to November",
     "🏜️Rajasthan": "October to March (Winter season is best for exploring deserts and forts)",
     "🏝️Goa": "November to February (Pleasant weather, ideal for beaches)",
@@ -42,7 +47,10 @@ const travelSeasons = {
     "🛕Uttarakhand": "March to June & September to November (Himalayan treks & pilgrimages)",
     "❄️Kashmir": "March to October (Tulip season to autumn views)",
     "☁️Meghalaya": "October to April (Waterfalls and pleasant weather)",
+    },
+    
 
+    lesserKnown: {
     // 🏕️ Lesser-Known Destinations
     "🏔️Spiti Valley": "May to September (Best for high-altitude road trips)",
     "⛰️Zanskar Valley": "June to September (For adventure seekers and monks' monasteries)",
@@ -55,8 +63,10 @@ const travelSeasons = {
     "🏛️Hampi": "October to February (UNESCO ruins, great for history lovers and backpackers)",
     "🌲Chopta": "March to June & September to November (Mini Switzerland of India, great for treks)",
     "🌸Valley of Flowers": "July to September (A paradise of blooming flowers in Uttarakhand)",
-
-    // 🌿 Hidden & Unexplored Gems
+    },
+    
+    hiddenGems: {
+         // 🌿 Hidden & Unexplored Gems
     "🌄Khajjiar": "March to June & September to November (Mini Switzerland of India in Himachal Pradesh)",
     "🏔️Munsiyari": "March to June (Hidden Himalayan gem in Uttarakhand, best for trekking)",
     "🏕️Shillong": "October to April (Best time to explore Scotland of the East)",
@@ -79,6 +89,7 @@ const travelSeasons = {
     "🪂Bir Billing": "October to June (Best place for paragliding in India, Himachal Pradesh)",
     "🌳Patalkot": "October to March (Hidden valley in Madhya Pradesh, home to ancient tribes)",
     "🌲Dibang Valley": "October to March (One of India's least explored valleys, Arunachal Pradesh)"
+    }
 };
 
 
@@ -177,62 +188,102 @@ const alternateRoutes = {
     "🌲Dibang Valley": "🚗 Roing → Anini → Dibang Valley → Mayudia Pass"
 };
 
+// Function to show categories in dropdown initially
+function populateInitialDropdown() {
+    let dropdown = document.getElementById("destinationSelect");
+    dropdown.innerHTML = `
+        <option value="">Choose a Category</option>
+        <option value="wellKnown">🏕️ Well-Known - Select a Destination</option>
+        <option value="lesserKnown">🌿 Lesser-Known - Select a Destination</option>
+        <option value="hiddenGems">🌿 Hidden & Unexplored Gems - Select a Destination</option>
+    `;
+}
 
-// Function to get the best time to visit a destination
-function getBestTime() {
-    let destinationDropdown = document.getElementById("destinationSelect");
-    let selectedDestination = destinationDropdown.value;
-    let bestTimeResult = document.getElementById("bestTimeResult");
 
-    if (travelSeasons[selectedDestination]) {
-        bestTimeResult.innerText = `Best time to visit ${selectedDestination}: ${travelSeasons[selectedDestination]}`;
+// Function to handle dropdown selection
+function handleSelection() {
+    let dropdown = document.getElementById("destinationSelect");
+    let bestTimeResult = document.getElementById("bestTimeResult"); // ✅ Get Best Time display
+    let selectedValue = dropdown.value;
+
+    if (selectedValue === "back") {
+        populateInitialDropdown(); // ✅ Go back to category selection
+        bestTimeResult.innerText = "Best time varies. Please check destination-specific guides."; // ✅ Reset text
+    } else if (travelSeasons[selectedValue]) {
+        populateDestinations(selectedValue); // ✅ Now updates destinations properly
     } else {
-        bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
+        showBestTime(selectedValue); // ✅ If it's a destination, show best time
     }
 }
 
+// Function to populate destinations based on selected category
+function populateDestinations(category) {
+    let dropdown = document.getElementById("destinationSelect");
+
+    // Store selected category as the first option to keep it visible
+    dropdown.innerHTML = `
+        <option value="${category}" selected>${dropdown.options[dropdown.selectedIndex].text}</option>
+        <option value="back">⬅️ Go Back</option>
+    `;
+
+    Object.keys(travelSeasons[category]).forEach((place) => {
+        let option = document.createElement("option");
+        option.value = place;
+        option.textContent = place;
+        dropdown.appendChild(option);
+    });
+}
+
+// Function to display best time when a destination is selected
+function showBestTime(destination) {
+    let bestTimeResult = document.getElementById("bestTimeResult");
+
+    for (const category in travelSeasons) {
+        if (travelSeasons[category][destination]) {
+            bestTimeResult.innerText = `📅 Best time to visit ${destination}: ${travelSeasons[category][destination]}`;
+            return;
+        }
+    }
+
+    bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
+}
 
 // Function to get the featured route for a destination
 function getFeaturedRoute() {
-    let routeDropdown = document.getElementById("routeSelect");
-    let selectedDestination = routeDropdown.value;
+    let selectedDestination = document.getElementById("routeSelect").value;
     let routeResult = document.getElementById("routeResult");
     let alternateRouteResult = document.getElementById("alternateRouteResult");
 
-    if (selectedDestination === "") {
-        routeResult.innerText = "Best route varies. Please check destination-specific guides.";
-        alternateRouteResult.innerText = "";
-    } else if (featuredRoutes[selectedDestination]) {
-        routeResult.innerText = `Recommended route for ${selectedDestination}: ${featuredRoutes[selectedDestination]}`;
-        alternateRouteResult.innerText = alternateRoutes[selectedDestination] 
-            ? `🚗 Alternate route: ${alternateRoutes[selectedDestination]}` 
-            : "No alternate route available.";
+    // Check if the selected destination has a main route
+    if (featuredRoutes[selectedDestination]) {
+        routeResult.innerText = `🚗 Recommended route for ${selectedDestination}: ${featuredRoutes[selectedDestination]}`;
     } else {
-        routeResult.innerText = "Route details not available. Please check specific travel guides.";
+        routeResult.innerText = "Route details not available.";
+    }
+
+    // Check if the selected destination has an alternate route
+    if (alternateRoutes[selectedDestination]) {
+        alternateRouteResult.innerText = `🚗 Alternate route: ${alternateRoutes[selectedDestination]}`;
+        alternateRouteResult.style.display = "block"; // Ensure visibility
+    } else {
         alternateRouteResult.innerText = "";
+        alternateRouteResult.style.display = "none"; // Hide if no alternate route
     }
 }
-
-
+// Run on page load
 document.addEventListener("DOMContentLoaded", () => {
-    let destinationDropdown = document.getElementById("destinationSelect");
+    populateInitialDropdown(); // ✅ Show categories first
+
     let routeDropdown = document.getElementById("routeSelect");
 
-    // Clear existing options to prevent duplication
-    destinationDropdown.innerHTML = '<option value="">🚀🔥 Let\'s Travel 🚀🔥</option>';
+    // Ensure route dropdown starts with the correct placeholder
     routeDropdown.innerHTML = '<option value="">🚀🔥 Let\'s Travel 🚀🔥</option>';
 
-    Object.keys(travelSeasons).forEach(place => {
-        let option = document.createElement("option");
-        option.value = place;
-        option.textContent = place.charAt(0).toUpperCase() + place.slice(1);
-        destinationDropdown.appendChild(option);
-    });
-
+    // ✅ Populate the routes dropdown correctly
     Object.keys(featuredRoutes).forEach(place => {
         let option = document.createElement("option");
         option.value = place;
-        option.textContent = place.charAt(0).toUpperCase() + place.slice(1);
+        option.textContent = place;
         routeDropdown.appendChild(option);
     });
 });
