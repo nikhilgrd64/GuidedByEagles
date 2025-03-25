@@ -21,10 +21,12 @@ nav {
 .logo {
     font-size: 24px;
     font-weight: bold;
+    color: white !important;
 }
 .logo-link {
     text-decoration: none; /* Removes underline */
     display: inline-block; /* Keeps block styling */
+    color: white !important;
   }
 nav ul {
     list-style: none;
