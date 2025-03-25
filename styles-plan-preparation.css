@@ -22,7 +22,10 @@ nav {
     font-size: 24px;
     font-weight: bold;
 }
-
+.logo-link {
+    text-decoration: none; /* Removes underline */
+    display: inline-block; /* Keeps block styling */
+  }
 nav ul {
     list-style: none;
     padding: 0;
