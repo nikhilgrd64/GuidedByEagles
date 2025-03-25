@@ -27,6 +27,7 @@ nav {
 .logo-link {
     text-decoration: none; /* Removes underline */
     display: inline-block; /* Keeps block styling */
+    color: white !important;
   }
   
 nav ul {
