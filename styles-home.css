@@ -24,7 +24,11 @@ nav {
     font-weight: bold;
     color: white !important;
 }
-
+.logo-link {
+    text-decoration: none; /* Removes underline */
+    display: inline-block; /* Keeps block styling */
+  }
+  
 nav ul {
     list-style: none;
     padding: 0;
