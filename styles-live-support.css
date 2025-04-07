@@ -10,6 +10,11 @@ header {
     padding: 15px 0;
     text-align: center;
 }
+.logo-link {
+    text-decoration: none; /* Removes underline */
+    color: inherit; /* Keeps the default text color */
+    display: inline-block; /* Keeps block styling */
+  }
 
 nav {
     display: flex;
@@ -21,14 +26,8 @@ nav {
 .logo {
     font-size: 24px;
     font-weight: bold;
-    color: white !important;
 }
-.logo-link {
-    text-decoration: none; /* Removes underline */
-    display: inline-block; /* Keeps block styling */
-    color: white !important;
-}
-  
+
 nav ul {
     list-style: none;
     padding: 0;
@@ -41,7 +40,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: white !important;
+    color: white;
     text-decoration: none;
     transition: color 0.3s ease;
     font-weight: bold;
@@ -80,7 +79,6 @@ nav ul li a {
     border-radius: 5px;
     margin-top: 10px;
 }
-
 
 .support-content {
     width: 60%;
