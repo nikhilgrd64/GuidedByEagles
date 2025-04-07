@@ -3,8 +3,7 @@ body {
     font-family: 'Poppins', sans-serif;
     background: #0d0d0d;
     color: white;
-    text-align: center;
-    scroll-behavior: smooth;
+    text-align: center; /* Center align all content */
 }
 
 header {
@@ -12,7 +11,12 @@ header {
     padding: 15px 0;
     text-align: center;
 }
-
+.logo-link {
+    text-decoration: none; /* Removes underline */
+    color: inherit; /* Keeps the default text color */
+    display: inline-block; /* Keeps block styling */
+  }
+  
 nav {
     display: flex;
     justify-content: space-between;
@@ -23,14 +27,8 @@ nav {
 .logo {
     font-size: 24px;
     font-weight: bold;
-    color: white !important;
 }
-.logo-link {
-    text-decoration: none; /* Removes underline */
-    display: inline-block; /* Keeps block styling */
-    color: white !important;
-  }
-  
+
 nav ul {
     list-style: none;
     padding: 0;
@@ -43,14 +41,10 @@ nav ul li {
 }
 
 nav ul li a {
-     color: white !important;
+    color: white;
     text-decoration: none;
     transition: color 0.3s ease;
     font-weight: bold;
-}
-
-nav ul li a:hover {
-    color: #ffcc00;
 }
 
 .page-banner {
@@ -66,19 +60,40 @@ nav ul li a:hover {
 .page-banner h1 {
     font-size: 2.5em;
     font-weight: bold;
+    display: inline-block;
     padding: 10px 20px;
     background: black;
+    text-decoration: none;
     border-radius: 5px;
+    margin-top: 10px;
+}
+
+.page-banner p {
+    font-size: 1.2em;
+    font-weight: bold;
+    opacity: 0.9;
+    display: inline-block;
+    padding: 10px 20px;
+    background: black;
+    color: white !important;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+
+/*
+.page-banner h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+    text-shadow: 3px 3px 10px rgba(255, 0, 0, 0.6);
 }
 
 .page-banner p {
     font-size: 1.2em;
     opacity: 0.9;
-    padding: 10px 20px;
-    background: black;
-    border-radius: 5px;
 }
-
+*/
 .post-trip-content {
     width: 60%;
     margin: auto;
@@ -140,41 +155,16 @@ textarea {
     resize: vertical;
 }
 
-/* Style for the Travel Period (Month & Year) dropdown */
-input[type="month"] {
-    appearance: none;
-    background: black;
-    color: white;
-    border: 1px solid rgba(255, 0, 0, 0.5);
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 8px;
-    width: 100%;
-    cursor: pointer;
-}
-
-input[type="month"]:hover {
-    border-color: red;
-}
-
-input[type="month"]:focus {
-    outline: none;
-    border-color: #ff4d4d;
-    box-shadow: 0px 0px 8px rgba(255, 77, 77, 0.5);
-}
-
 button {
     background: red;
     color: white;
     font-size: 18px;
     cursor: pointer;
     transition: all 0.3s ease;
-    border: none;
 }
 
 button:hover {
     background: darkred;
-    transform: scale(1.05);
 }
 
 /* Story Gallery */
@@ -186,55 +176,11 @@ button:hover {
     margin-top: 20px;
 }
 
-/* Individual Story Entry */
 .story-entry {
-    padding: 15px;
-    margin: 10px 0;
+    padding: 10px;
+    margin-top: 10px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    border-left: 5px solid red;
-    transition: all 0.3s ease;
-}
-
-.story-entry:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.02);
-}
-
-.story-entry h3 {
-    color: #ffcc00;
-    font-size: 1.3em;
-    margin-bottom: 5px;
-}
-
-/* Styling for Story Sections */
-.story-entry p {
-    font-size: 1.1em;
-    color: white;
-    margin: 5px 0;
-}
-
-.story-entry p strong {
-    color: #ff4d4d;
-}
-
-/* Links Styling */
-.story-entry a {
-    color: #ffcc00;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.story-entry a:hover {
-    text-decoration: underline;
-}
-
-/* Horizontal Line for Separation */
-.story-entry hr {
-    border: 0;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.2);
-    margin-top: 10px;
 }
 
 /* Chat Button */
@@ -248,11 +194,6 @@ button:hover {
     border-radius: 50px;
     cursor: pointer;
     font-size: 14px;
-    transition: transform 0.3s ease;
-}
-
-#chat-button:hover {
-    transform: scale(1.1);
 }
 
 /* Footer */
@@ -260,27 +201,4 @@ footer {
     background: #8B0000;
     padding: 10px;
     text-align: center;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .post-trip-content {
-        width: 90%;
-        padding: 20px;
-    }
-
-    .page-banner h1 {
-        font-size: 2em;
-    }
-
-    .page-banner p {
-        font-size: 1em;
-    }
-
-    button {
-        font-size: 16px;
-    }
 }
