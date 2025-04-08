@@ -3,6 +3,8 @@ body {
     font-family: 'Poppins', sans-serif;
     background: #0d0d0d;
     color: white;
+    display: flex;
+    flex-direction: row;
 }
 
 header {
@@ -237,7 +239,43 @@ nav ul li a {
   .sidebar ul li a:hover {
     color: #ff4444;
   }
-  
+  .sidebar {
+    width: 250px;
+    background-color: #b10000;
+    color: white;
+    padding: 20px;
+    min-height: 100vh;
+  }
+
+  .sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    margin: 10px 0;
+  }
+
+.content {
+    flex: 1;
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    body {
+      flex-direction: column;
+    }
+
+    .sidebar {
+      width: 100%;
+      min-height: auto;
+    }
+
+    .sidebar a {
+      display: inline-block;
+      margin: 10px 10px 10px 0;
+    }
+  }
 
 /* Footer */
 footer {
