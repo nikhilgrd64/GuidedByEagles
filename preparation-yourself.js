@@ -12,4 +12,30 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   });
+
+  function calculateReadiness() {
+    const checks = document.querySelectorAll('.readiness-check');
+    const radios = document.querySelectorAll('.readiness-quiz');
+    let score = 0;
+    let total = checks.length + 3; // 3 quiz questions
+  
+    checks.forEach(c => {
+      if (c.checked) score++;
+    });
+  
+    let answered = new Set();
+    radios.forEach(r => {
+      if (r.checked && r.value === 'yes') {
+        let qName = r.name;
+        if (!answered.has(qName)) {
+          answered.add(qName);
+          score++;
+        }
+      }
+    });
+  
+    let percent = Math.round((score / total) * 100);
+    document.getElementById('readiness-score').innerText = "You're " + percent + "% Ready";
+    document.getElementById('readiness-bar').value = percent;
+  }
   
