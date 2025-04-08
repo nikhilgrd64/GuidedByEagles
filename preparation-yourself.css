@@ -239,14 +239,6 @@ nav ul li a {
   .sidebar ul li a:hover {
     color: #ff4444;
   }
-  .sidebar {
-    width: 250px;
-    background-color: #b10000;
-    color: white;
-    padding: 20px;
-    min-height: 100vh;
-  }
-
   .sidebar a {
     display: block;
     color: white;
