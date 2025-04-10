@@ -16,10 +16,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // Sidebar toggle for mobile
   const menuToggle = document.getElementById('menu-toggle');
   const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
 
-  if (menuToggle && sidebar) {
+  if (menuToggle && sidebar && overlay) {
     menuToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('active');
+      sidebar.classList.add('active');
+      overlay.classList.remove('hidden');
+      menuToggle.style.display = 'none';
+    });
+
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      overlay.classList.add('hidden');
+      menuToggle.style.display = 'block';
     });
   }
 });
