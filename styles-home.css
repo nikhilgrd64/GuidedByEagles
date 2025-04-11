@@ -5,11 +5,17 @@ body {
     background-color: black;
     color: white !important;
 }
+
 /* Header & Navigation */
 header {
     background: #8B0000;
     padding: 15px 0;
     text-align: center;
+}
+
+.logo-link {
+    text-decoration: none;
+    display: inline-block;
 }
 
 nav {
@@ -24,12 +30,7 @@ nav {
     font-weight: bold;
     color: white !important;
 }
-.logo-link {
-    text-decoration: none; /* Removes underline */
-    display: inline-block; /* Keeps block styling */
-    color: white !important;
-  }
-  
+
 nav ul {
     list-style: none;
     padding: 0;
@@ -47,6 +48,7 @@ nav ul li a {
     transition: color 0.3s ease;
     font-weight: bold;
 }
+
 /* Hero Section */
 #hero {
     background: url('hero-image.jpg') no-repeat center center/cover;
@@ -81,6 +83,7 @@ nav ul li a {
     margin-top: 10px;
     transition: background 0.3s ease;
 }
+
 .cta-button:hover {
     background: darkred;
 }
@@ -103,7 +106,7 @@ section p {
     width: 100%;
     max-width: 320px;
 }
-/* Dropdown Select Field */
+
 select {
     width: 100%;
     padding: 10px;
@@ -119,7 +122,6 @@ select {
     transition: all 0.3s ease;
 }
 
-/* Add a dropdown arrow */
 .custom-dropdown::after {
     content: "▼";
     position: absolute;
@@ -130,68 +132,173 @@ select {
     pointer-events: none;
 }
 
-/* Highlight selected option */
 select:focus {
     border: 2px solid #f39c12;
     outline: none;
 }
 
-/* Hover Effect */
 select:hover {
     background-color: #333;
 }
 
-/* Best Time Result Styling */
-p#bestTimeResult {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-    font-weight: bold;
-    color: #f39c12;
-    font-size: 18px;
-    padding: 10px;
-    border-radius: 5px;
-    background: rgba(255, 165, 0, 0.2);
-    display: inline-block;  /* Ensures it stays with the dropdown */
-    width: auto; /* Prevents it from stretching too much */
-    text-align: center;
-    white-space: nowrap; /* Keeps text in a single line */
-}
-
-
-/* Route Result Styling */
-p#routeResult {
-    margin-top: 10px;
-    font-weight: bold;
-    color: #f39c12;
-    font-size: 18px;
-    padding: 10px;
-    border-radius: 5px;
-    background: rgba(255, 165, 0, 0.2);
-    display: inline-block;
-}
-
-/* Alternate Route Styling */
-/* Fix alignment and background stretch issue */
+/* Result Styling */
+p#bestTimeResult,
+p#routeResult,
 p#alternateRouteResult {
     margin-top: 10px;
     font-weight: bold;
     font-size: 18px;
-    padding: 10px 15px; /* Ensure padding is even */
+    padding: 10px 15px;
     border-radius: 5px;
-    background: rgba(255, 165, 0, 0.2); /* Light Orange Background */
-    color: #f39c12; /* Orange Text */
-    display: inline-block; 
-    text-align: center; /* Center text */
-    max-width: fit-content; /* Background wraps around text */
-    white-space: nowrap; /* Prevent text from breaking */
-    margin-left: auto; /* Center horizontally */
-    margin-right: auto;
+    background: rgba(255, 165, 0, 0.2);
+    color: #f39c12;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
 }
 
+p#bestTimeResult {
+    width: auto;
+}
 
+p#alternateRouteResult {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: fit-content;
+}
 
+/* Info Section */
+.info-section {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #0d0d0d;
+    color: white;
+}
+
+.info-section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 40px;
+    color: #ff4444;
+    font-weight: bold;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    margin: 40px auto;
+    max-width: 1000px;
+    padding: 0 20px;
+    justify-content: center;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    border-radius: 16px;
+    padding: 30px 20px;
+    text-align: left;
+    color: white;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.15);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(255, 0, 0, 0.3);
+}
+
+.card .icon {
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+    color: #ff4444;
+}
+
+.card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.card p {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    line-height: 1.4;
+}
+
+/* Animation */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInMoveUp 1s ease-out forwards;
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeInMoveUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Prepare Road Section */
+.prepare-road {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.learn-more-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #b10000;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.learn-more-btn:hover {
+    background-color: #ff4444;
+}
+
+.card-grid .card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    box-shadow: 0px 4px 12px rgba(255, 0, 0, 0.1);
+    text-align: left;
+}
+
+.card-grid .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(255, 0, 0, 0.3);
+}
+
+.card-grid .card .icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+/* Share Button */
+.share-btn {
+    display: inline-block;
+    margin: 30px auto 0;
+    padding: 12px 24px;
+    background-color: #ff4444;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.share-btn:hover {
+    background-color: #e63232;
+}
 
 /* Footer */
 footer {
@@ -200,3 +307,15 @@ footer {
     text-align: center;
     color: white !important;
 }
+
+/* Responsive */
+@media (max-width: 600px) {
+    .card {
+        padding: 20px 15px;
+    }
+
+    .card-grid {
+        padding: 0 10px;
+    }
+}
+
