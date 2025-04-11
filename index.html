@@ -1,112 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📝Guided by Eagles🦅</title>
-    <link rel="stylesheet" href="styles-home.css">
-    <script defer src="script-home.js"></script>  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guided by Eagles</title>
+  <link rel="stylesheet" href="styles-home.css" />
+  <script defer src="script-home.js"></script>
 </head>
 <body>
-    
-    <!-- Header & Navigation -->
-    <header>
-        <nav>
-            <a href="index.html" class="logo-link"><div class="logo">📝 Guided by Eagles 🦅</div></a>
-            <ul>
-                <li><a href="trip-planning.html">Plan</a></li>
-                <li><a href="preparation.html">Prepare</a></li>
-                <li><a href="live-support.html">Support</a></li>
-                <li><a href="post-trip.html">Stories</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section id="hero">
-        <div class="hero-content">
-            <h1>Explore the Unknown</h1>
-            <p>Your Journey, Your Adventure, Our Guidance.</p>
-            <a href="trip-planning.html" class="cta-button">Plan Your Journey</a>
-        </div>
-    </section>
+  <!-- Header & Navigation -->
+  <header>
+    <nav>
+      <a href="index.html" class="logo-link">
+        <div class="logo">📝 Guided by Eagles 🦅</div>
+      </a>
+      <ul>
+        <li><a href="trip-planning.html">Plan</a></li>
+        <li><a href="preparation.html">Prepare</a></li>
+        <li><a href="live-support.html">Support</a></li>
+        <li><a href="post-trip.html">Stories</a></li>
+      </ul>
+    </nav>
+  </header>
 
-    <!-- Plan Your Journey Section -->
-    <section id="trip-planning">
-        <a href="trip-planning.html"><h2>Plan Your Journey</h2></a>
-        <p>Get expert advice, routes, and tips for your next adventure.</p>
+  <!-- Hero Section -->
+  <section id="hero">
+    <div class="hero-content">
+      <h1>Explore the Unknown</h1>
+      <p>Your Journey, Your Adventure, Our Guidance.</p>
+      <a href="trip-planning.html" class="cta-button">Plan Your Journey</a>
+    </div>
+  </section>
 
-         <!-- Best Time to Visit Section -->
-         <div class="best-time">
-         <h3>Best Time to Visit</h3>
-    
-    
-         <label for="categorySelect">Category of Your Journey:</label>
-         <div class="custom-dropdown">
-             <select id="categorySelect" onchange="populateDestinations()">
-                 <option value="">Choose a Category</option>
-                 <option value="wellKnown">🏕️ Well-Known</option>
-                 <option value="lesserKnown">🌿 Lesser-Known</option>
-                 <option value="hiddenGems">🌿 Hidden & Unexplored Gems</option>
-             </select>
-         </div>
-         <label for="destinationSelect">Destination of Your Journey:</label>
-            <div class="custom-dropdown">
-                <select id="destinationSelect" onchange="showBestTime()">
-                    <option value="" disabled selected>Choose a Destination</option>
-                </select>
-            </div>
+  <!-- Plan Your Journey Section -->
+  <section id="plan-journey" class="prepare-road">
+    <a href="trip-planning.html"><h2>🗺️ Plan Your Journey</h2></a>
+    <p><strong>🦅 Chart the Path to Unforgettable Adventures.</strong></p>
+    <p>
+      Discover curated routes, insider tips, and local highlights to shape your perfect trip. 
+      Whether it's a weekend getaway or a cross-country escape — plan smart, ride far.
+    </p>
 
-    <p id="bestTimeResult">Best time varies. Please check destination-specific guides.</p>
-</div>
+    <div class="best-time">
+      <h3>Best Time to Visit</h3>
 
+      <label for="categorySelect">Category of Your Journey:</label>
+      <div class="custom-dropdown">
+        <select id="categorySelect" onchange="populateDestinations()">
+          <option value="">Choose a Category</option>
+          <option value="wellKnown">🏕️ Well-Known</option>
+          <option value="lesserKnown">🌿 Lesser-Known</option>
+          <option value="hiddenGems">🌿 Hidden & Unexplored Gems</option>
+        </select>
+      </div>
 
-        <!-- Featured Routes Section -->
-        <div class="featured-routes">
-            <h3>Featured Routes</h3>
-            <label for="routeSelect">Select The Destination:</label>
-            <div class="custom-dropdown">
-                <select id="routeSelect" onchange="getFeaturedRoute()">
-                    <option value="">🚀🔥 Let's Travel 🚀🔥</option> <!-- ✅ Added default option -->
-                </select>
-            </div>
-            <p id="routeResult">Best route varies. Please check destination-specific guides.</p>
-            <h3>Alternate Route</h3>
-            <p id="alternateRouteResult"></p>
-        </div>
+      <label for="destinationSelect">Destination of Your Journey:</label>
+      <div class="custom-dropdown">
+        <select id="destinationSelect" onchange="showBestTime()">
+          <option value="" disabled selected>Choose a Destination</option>
+        </select>
+      </div>
 
-    <!-- Prepare for the Road Section -->
-    <section id="preparation">
-        <a href="preparation.html"><h2>Prepare for the Road</h2></a>
-        <p>Ensure your fitness, vehicle, and luggage are ready.</p>
-        <div class="vehicle-guide">
-            <h3>Vehicle Readiness Guide</h3>
-            <p>Tips for preparing your car or bike for long journeys.</p>
-        </div>
-    </section>
-    
-    <!-- Live Travel Support Section -->
-    <section id="support">
-        <a href="live-support.html"><h2>Live Travel Support</h2></a>
-        <p>Real-time assistance, road conditions, and emergency help.</p>
-          <div class="travel-alerts">
-            <h3>Real-Time Travel Alerts</h3>
-            <p id="alertMessage">No new alerts.</p>
-        </div>
-    </section>
+      <p id="bestTimeResult">Best time varies. Please check destination-specific guides.</p>
+    </div>
 
-    <!-- Travel Stories Section -->
-    <section id="stories">
-        <a href="post-trip.html"><h2>Travel Stories</h2></a>
-        <p>Read and share inspiring journey experiences.</p>
-        <div class="featured-adventure">
-            <h3>Featured Adventure of the Month</h3>
-            <p>Highlighting an exciting journey from our travelers.</p>
-        </div>
-    </section>
- 
-    <footer>
-        <p>&copy; 2025 Guided by Eagles. All Rights Reserved.</p>
-    </footer>
+    <div class="featured-routes">
+      <h3>Featured Routes</h3>
+      <label for="routeSelect">Select The Destination:</label>
+      <div class="custom-dropdown">
+        <select id="routeSelect" onchange="getFeaturedRoute()">
+          <option value="">🚀🔥 Let's Travel 🚀🔥</option>
+        </select>
+      </div>
+      <p id="routeResult">Best route varies. Please check destination-specific guides.</p>
+      <h3>Alternate Route</h3>
+      <p id="alternateRouteResult"></p>
+    </div>
+  </section>
+
+  <!-- Journey Prepared Section -->
+  <section id="journey-prepared" class="prepare-road">
+    <a href="preparation.html"><h2>🌍 Journey Prepared</h2></a>
+    <p><strong>🦅 Empower Every Step of the Way.</strong></p>
+    <p>
+      Whether you're riding solo or exploring with friends, get fully equipped for the road ahead. 
+      From fitness tips and smart packing to safety advice and budgeting — travel well, travel wise.
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="icon">🏋️</div>
+        <h3>Build Your Riding Stamina</h3>
+        <p>Quick daily routines and breathwork techniques to boost your endurance before you ride.</p>
+        <a href="build-stamina.html" class="learn-more-btn">Learn More</a>
+      </div>
+
+      <div class="card">
+        <div class="icon">🥪</div>
+        <h3>What to Eat Before & During the Ride</h3>
+        <p>Fuel up like a pro — light meals, hydration, and trail snacks that actually work.</p>
+        <a href="eat-right.html" class="learn-more-btn">Learn More</a>
+      </div>
+
+      <div class="card">
+        <div class="icon">🎒</div>
+        <h3>Adventure-Proof Your Backpack</h3>
+        <p>Don't pack heavy — pack smart. See the exact checklist used by our off-road pros.</p>
+        <a href="pack-smart.html" class="learn-more-btn">Learn More</a>
+      </div>
+
+      <div class="card">
+        <div class="icon">🧠</div>
+        <h3>Train Your Mind for the Wild</h3>
+        <p>Riding solo or remote? Here’s how to stay sharp, aware, and chill under pressure.</p>
+        <a href="ride-safe.html" class="learn-more-btn">Learn More</a>
+      </div>
+
+      <div class="card">
+        <div class="icon">💰</div>
+        <h3>Adventure on a Budget</h3>
+        <p>Cut unnecessary costs without cutting the thrill. Travel light, spend right.</p>
+        <a href="budgeting.html" class="learn-more-btn">Learn More</a>
+      </div>
+
+      <div class="card">
+        <div class="icon">🗺️</div>
+        <h3>Know the Land</h3>
+        <p>Study terrain, map routes, and ride in harmony with nature and locals.</p>
+        <a href="know-the-land.html" class="learn-more-btn">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Travel Support Section -->
+  <section id="live-travel-support" class="prepare-road">
+    <div class="section-heading">
+      <a href="live-support.html"><h2>📝 Guided Every Mile</h2></a>
+      <p><strong>🦅 On the Road, You’re Never Alone.</strong></p>
+      <p>
+        Stay connected with real-time help while you ride. From route changes and weather alerts 
+        to emergency assistance and expert advice — our support rides with you, 24/7.
+      </p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="icon">🚨</div>
+        <h3>Emergency Assistance</h3>
+        <p>One-tap SOS for breakdowns or danger — fast help, no matter where you are.</p>
+        <a href="live-support.html#emergency" class="learn-more-btn">Learn More</a>
+      </div>
+
+      <div class="card">
+        <div class="icon">📍</div>
+        <h3>Live Navigation Alerts</h3>
+        <p>Real-time road updates, diversions, and weather warnings to keep you informed.</p>
+        <a href="live-support.html#navigation" class="learn-more-btn">Learn More</a>
+      </div>
+
+      <div class="card">
+        <div class="icon">🧑‍💻</div>
+        <h3>Talk to a Travel Expert</h3>
+        <p>24/7 live chat and call support for guidance, help, or route changes.</p>
+        <a href="live-support.html#expert" class="learn-more-btn">Learn More</a>
+      </div>
+
+      <div class="card">
+        <div class="icon">🔧</div>
+        <h3>Nearby Help Finder</h3>
+        <p>Locate mechanics, fuel stations, clinics — even in remote or unfamiliar zones.</p>
+        <a href="live-support.html#locator" class="learn-more-btn">Learn More</a>
+      </div>
+
+      <div class="card">
+        <div class="icon">📶</div>
+        <h3>Offline Survival Pack</h3>
+        <p>Download emergency contacts, offline maps & medical info before your ride.</p>
+        <a href="live-support.html#offline" class="learn-more-btn">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Travel Community -->
+  <section id="post-trip" class="prepare-road">
+    <div class="section-heading">
+      <a href="post-trip.html"><h2>Our Travel Community</h2></a>
+      <p><strong>🦅 On the Road, You’re Never Alone.</strong></p>
+      <p>Join our tribe of explorers! Share your travel tales and be part of a growing community that lives for the journey.</p>
+    </div>
+
+    <div class="card-grid">
+      <!-- Basic Cards -->
+      <div class="card"><div class="icon">📸</div><h3>Inspire Others</h3><p>Your story could spark someone’s next big adventure.</p></div>
+      <div class="card"><div class="icon">🌍</div><h3>Grow the Tribe</h3><p>Help build a passionate community of travelers and explorers.</p></div>
+      <div class="card"><div class="icon">📝</div><h3>Get Featured</h3><p>Submit your journey and get a chance to be featured on our platform.</p></div>
+
+      <!-- Interactive Cards -->
+      <div class="card"><div class="icon">💡</div><h3>Travel Tips & Hacks Exchange</h3><p>Share smart travel hacks, packing tricks, and time-saving tips with the community.</p></div>
+      <div class="card"><div class="icon">❓</div><h3>Traveler Q&A Hub</h3><p>Got questions? Ask fellow travelers or answer for others based on your experience.</p></div>
+      <div class="card"><div class="icon">🎒</div><h3>Gear & Ride Setup Showcase</h3><p>Flex your setup! Show off your ride or pack list, and inspire fellow explorers.</p></div>
+      <div class="card"><div class="icon">📝</div><h3>Quote of the Journey</h3><p>Got a moment or phrase that defined your trip? Share it and pass the spark on.</p></div>
+      <div class="card"><div class="icon">📍</div><h3>Ask a Local</h3><p>Connect with locals and get authentic advice about food, customs, and spots to see.</p></div>
+      <div class="card"><div class="icon">🗳️</div><h3>Polls & Voting</h3><p>Vote on gear choices, routes, and travel decisions. Help shape upcoming journeys.</p></div>
+      <div class="card"><div class="icon">🤝</div><h3>Travel Buddy Finder</h3><p>Looking for company on your next trip? Connect with like-minded adventurers here.</p></div>
+    </div>
+
+    <a href="post-trip.html" class="share-btn">Share Your Story</a>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Guided by Eagles. All Rights Reserved.</p>
+  </footer>
 </body>
 </html>
