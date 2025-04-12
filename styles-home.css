@@ -12,10 +12,12 @@
     z-index: 1000;
     padding: 2rem;
     transition: opacity 1s ease-out;
-    width: 50%;
-    height: 50%;
+    width: 70%;
+    height: 70%;
     transform: translate(-50%, -50%);
     border-radius: 15px;
+    max-height: 90vh; /* Prevent overlay from covering full screen */
+    overflow-y: auto; /* Allows scroll if content exceeds height */
 }
 
 /* Vision Content Block */
@@ -72,6 +74,13 @@
     display: none !important;
 }
 
+/* Optional: visibility toggle */
+.vision-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
     .vision-overlay {
@@ -123,6 +132,9 @@ body {
     font-family: Arial, sans-serif;
     background-color: black;
     color: white !important;
+    overflow-x: hidden;
+    /* Optional: add scroll for overflow */
+    overflow-y: auto;
 }
 
 /* Header & Navigation */
