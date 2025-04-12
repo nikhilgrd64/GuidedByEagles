@@ -17,7 +17,6 @@
     transform: translate(-50%, -50%);
     border-radius: 15px;
     max-height: 90vh; /* Prevent overlay from covering full screen */
-    overflow-y: auto; /* Allows scroll if content exceeds height */
 }
 
 /* Vision Content Block */
