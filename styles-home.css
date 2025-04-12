@@ -16,6 +16,7 @@
     height: 70%;
     transform: translate(-50%, -50%);
     border-radius: 15px;
+    overflow-y: auto; /* Allows scroll if content exceeds height */
 }
 
 /* Vision Content Block */
