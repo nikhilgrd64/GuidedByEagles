@@ -1,3 +1,122 @@
+/* Vision Overlay */
+.vision-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 1000;
+    padding: 2rem;
+    transition: opacity 1s ease-out;
+    width: 70%;
+    height: 70%;
+    transform: translate(-50%, -50%);
+    border-radius: 15px;
+}
+
+/* Vision Content Block */
+.vision-content {
+    max-width: 600px;
+    width: 100%;
+}
+
+.vision-content h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.vision-content p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+/* Skip Button */
+#skip-button {
+    margin-top: 1.5rem;
+    padding: 0.6rem 1.2rem;
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+#skip-button:hover {
+    background-color: #b91c1c;
+}
+
+.fade-out {
+    opacity: 0;
+}
+
+/* Welcome Popup */
+#welcome-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .vision-overlay {
+        width: 80%;  /* Adjust width for smaller screens */
+        height: auto;  /* Make height auto to avoid cutting off content */
+        padding: 1.5rem;
+    }
+
+    .vision-content h1 {
+        font-size: 1.6rem;  /* Smaller font for headings */
+    }
+
+    .vision-content p {
+        font-size: 1rem;  /* Adjust font size for better readability */
+    }
+
+    #skip-button {
+        margin-top: 1rem;
+        padding: 0.6rem 1rem;  /* Slightly smaller button size for mobile */
+        font-size: 1rem;  /* Make text on button more readable */
+    }
+}
+
+@media (max-width: 480px) {
+    .vision-overlay {
+        width: 90%;  /* Adjust width for very small screens */
+        height: auto;
+        padding: 1rem;
+    }
+
+    .vision-content h1 {
+        font-size: 1.4rem;  /* Further adjust heading size */
+    }
+
+    .vision-content p {
+        font-size: 0.95rem;  /* Further adjust paragraph font size */
+    }
+
+    #skip-button {
+        margin-top: 1rem;
+        padding: 0.6rem 1rem;
+        font-size: 0.95rem;  /* Smaller button text */
+    }
+}
+
 /* General Styles */
 body {
     margin: 0;
@@ -165,35 +284,6 @@ p#alternateRouteResult {
     margin-left: auto;
     margin-right: auto;
     max-width: fit-content;
-}
-
-/* Adjustments for Best Route and Best Time to Visit */
-.best-route, .best-time {
-    max-width: 100%;
-    word-wrap: break-word;  /* Ensure text wraps properly */
-    padding: 1rem;
-    margin: 1rem 0;
-    box-sizing: border-box;
-    overflow-wrap: break-word;  /* Ensures long words or links break properly */
-}
-
-/* Specific styling for small screens */
-@media (max-width: 768px) {
-    .best-route, .best-time {
-        max-width: 90%; /* Ensure it doesn't stretch too wide on mobile */
-        margin-left: auto;
-        margin-right: auto;
-        padding: 1rem;  /* Add padding to avoid content sticking to the edges */
-    }
-}
-
-@media (max-width: 480px) {
-    .best-route, .best-time {
-        max-width: 90%; /* Slightly smaller on very small screens */
-        margin-left: auto;
-        margin-right: auto;
-        padding: 1rem;  /* Ensure it's not cramped */
-    }
 }
 
 /* Info Section */
