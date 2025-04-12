@@ -314,7 +314,7 @@ function populateDestinations() {
     let selectedCategory = categoryDropdown.value;
 
     // ✅ Reset best time message
-    bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
+    bestTimeResult.innerHTML = "Best time varies.<br>Please check destination-specific guides.";
 
     // ✅ Reset destinations dropdown
     destinationDropdown.innerHTML = `<option value="" disabled selected>Choose a Destination</option>`;
@@ -335,11 +335,11 @@ function showBestTime() {
     let bestTimeResult = document.getElementById("bestTimeResult");
     let selectedDestination = destinationDropdown.value;
 
-    bestTimeResult.innerText = "Best time varies. Please check destination-specific guides.";
+    bestTimeResult.innerHTML = "Best time varies<br>Please check destination-specific guides.";
 
     for (const category in travelSeasons) {
         if (travelSeasons[category][selectedDestination]) {
-            bestTimeResult.innerText = `📅 Best time to visit ${selectedDestination}: ${travelSeasons[category][selectedDestination]}`;
+            bestTimeResult.innerHTML = `📅 Best time to visit:<br>${selectedDestination}: ${travelSeasons[category][selectedDestination]}`;
             return;
         }
     }
@@ -352,15 +352,15 @@ function getFeaturedRoute() {
     let alternateRouteResult = document.getElementById("alternateRouteResult");
 
     if (!selectedDestination) {
-        routeResult.innerText = "Best route varies. Please check destination-specific guides.";
-        alternateRouteResult.innerText = "Select a destination for alternate route.";
+        routeResult.innerHTML = "Best route varies.<br>Please check destination-specific guides.";
+        alternateRouteResult.innerHTML = "Select a destination for alternate route.";
         alternateRouteResult.style.display = "block";
         return;
     }
 
 // ✅ Show main route
-routeResult.innerText = featuredRoutes[selectedDestination]
-? `🚗 Recommended route: ${featuredRoutes[selectedDestination]}`
+routeResult.innerHTML = featuredRoutes[selectedDestination]
+? `🚗 Recommended route:<br>${featuredRoutes[selectedDestination]}`
 : "Route details not available.";
 
 // ✅ Show multiple alternate routes properly
@@ -369,29 +369,45 @@ let formattedRoutes = alternateRoutes[selectedDestination].map(route => `🚗 ${
 alternateRouteResult.innerHTML = formattedRoutes;
 alternateRouteResult.style.display = "block";
 } else {
-alternateRouteResult.innerText = "Select a destination for alternate route.";
+alternateRouteResult.innerHTML = "Select a destination for alternate route.";
 alternateRouteResult.style.display = "block";
 }
 }
 
 // ✅ Ensure correct dropdown behavior on page load
 document.addEventListener("DOMContentLoaded", () => {
-    // ✅ Populate default category
+    // Handle vision intro popup
+    const visionIntro = document.getElementById("vision-intro");
+    const skipBtn = document.getElementById("skip-button");
+  
+    // Check if the user has already skipped the popup using localStorage
+    if (localStorage.getItem("popupSkipped")) {
+      visionIntro.classList.add("hidden");
+    }
+  
+    // Skip button to hide the popup and store the skip action in localStorage
+    skipBtn.addEventListener("click", () => {
+      visionIntro.classList.add("hidden");
+      localStorage.setItem("popupSkipped", "true");
+    });
+  
+    // Populate default category (Assuming you have a function to do this)
     populateDestinations();
-
-    // ✅ Populate routes dropdown
+  
+    // Populate routes dropdown
     let routeDropdown = document.getElementById("routeSelect");
     routeDropdown.innerHTML = `<option value="">🚀🔥 Let's Travel 🚀🔥</option>`;
-
+  
     Object.keys(featuredRoutes).forEach(place => {
-        let option = document.createElement("option");
-        option.value = place;
-        option.textContent = place;
-        routeDropdown.appendChild(option);
+      let option = document.createElement("option");
+      option.value = place;
+      option.textContent = place;
+      routeDropdown.appendChild(option);
     });
-
-    // ✅ Set correct default messages
-    document.getElementById("routeResult").innerText = "Best route varies. Please check destination-specific guides.";
-    document.getElementById("alternateRouteResult").innerText = "Select a destination for alternate route.";
+  
+    // Set correct default messages
+    document.getElementById("routeResult").innerHTML = "Best route varies.<br>Please check destination-specific guides.";
+    document.getElementById("alternateRouteResult").innerHTML = "Select a destination for alternate route.";
     document.getElementById("alternateRouteResult").style.display = "block";
-});
+  });
+  
