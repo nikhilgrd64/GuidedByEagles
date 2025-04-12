@@ -16,7 +16,6 @@
     height: 70%;
     transform: translate(-50%, -50%);
     border-radius: 15px;
-    max-height: 90vh; /* Prevent overlay from covering full screen */
 }
 
 /* Vision Content Block */
@@ -73,13 +72,6 @@
     display: none !important;
 }
 
-/* Optional: visibility toggle */
-.vision-overlay.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
-
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
     .vision-overlay {
@@ -131,9 +123,6 @@ body {
     font-family: Arial, sans-serif;
     background-color: black;
     color: white !important;
-    overflow-x: hidden;
-    /* Optional: add scroll for overflow */
-    overflow-y: auto;
 }
 
 /* Header & Navigation */
@@ -448,4 +437,3 @@ footer {
         padding: 0 10px;
     }
 }
-
