@@ -167,6 +167,35 @@ p#alternateRouteResult {
     max-width: fit-content;
 }
 
+/* Adjustments for Best Route and Best Time to Visit */
+.best-route, .best-time {
+    max-width: 100%;
+    word-wrap: break-word;  /* Ensure text wraps properly */
+    padding: 1rem;
+    margin: 1rem 0;
+    box-sizing: border-box;
+    overflow-wrap: break-word;  /* Ensures long words or links break properly */
+}
+
+/* Specific styling for small screens */
+@media (max-width: 768px) {
+    .best-route, .best-time {
+        max-width: 90%; /* Ensure it doesn't stretch too wide on mobile */
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1rem;  /* Add padding to avoid content sticking to the edges */
+    }
+}
+
+@media (max-width: 480px) {
+    .best-route, .best-time {
+        max-width: 90%; /* Slightly smaller on very small screens */
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1rem;  /* Ensure it's not cramped */
+    }
+}
+
 /* Info Section */
 .info-section {
     padding: 60px 20px;
