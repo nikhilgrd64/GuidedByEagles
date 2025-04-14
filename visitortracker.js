@@ -35,13 +35,21 @@ function getDeviceInfo() {
 }
 
 export async function logVisitor() {
-  try {
-    const response = await fetch("https://api.ipify.org?format=json");
-    const data = await response.json();
-    const ip = data.ip;
-    const page = window.location.pathname;
-    const deviceInfo = getDeviceInfo();
+  console.log("📡 Visitor tracker is running...");
 
+  let ip = "unknown";
+  try {
+    const response = await fetch("https://api64.ipify.org?format=json");
+    const data = await response.json();
+    ip = data.ip;
+  } catch (e) {
+    console.warn("⚠️ Could not fetch IP:", e);
+  }
+
+  const page = window.location.pathname;
+  const deviceInfo = getDeviceInfo();
+
+  try {
     await addDoc(collection(db, "visitors"), {
       ip: ip,
       page: page,
@@ -50,7 +58,8 @@ export async function logVisitor() {
       platform: deviceInfo.platform,
       timestamp: serverTimestamp()
     });
+    console.log("✅ Visitor logged successfully");
   } catch (e) {
-    console.error("Visitor tracking failed:", e);
+    console.error("❌ Visitor tracking failed:", e);
   }
 }
