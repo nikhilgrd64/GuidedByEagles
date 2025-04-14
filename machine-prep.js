@@ -1,3 +1,6 @@
+import { logVisitor } from './visitortracker.js';
+logVisitor();
+
 function showVehicleTips(vehicle) {
     const tips = {
       motorcycle: `
