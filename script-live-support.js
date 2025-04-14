@@ -1,3 +1,6 @@
+import { logVisitor } from './visitortracker.js';
+logVisitor();
+
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Live Travel Support page loaded!");
 
