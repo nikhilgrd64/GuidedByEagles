@@ -1,0 +1,238 @@
+/* Base Styles */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #0d0d0d;
+    color: white;
+  }
+  
+  /* Header Navigation */
+  header {
+    background: #8B0000;
+    padding: 15px 0;
+    text-align: center;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .logo-link {
+    text-decoration: none;
+    color: white;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav ul li {
+    margin: 0 15px;
+  }
+  
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+  }
+  
+  nav ul li a:hover {
+    color: #FFD700;
+  }
+  
+  /* Banner Section */
+  
+.page-banner {
+    background: url('banner-image.jpg') no-repeat center center/cover;
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.page-banner h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+    display: inline-block;
+    padding: 10px 20px;
+    background: black;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.page-banner p {
+    font-size: 1.2em;
+    font-weight: bold;
+    opacity: 0.9;
+    display: inline-block;
+    padding: 10px 20px;
+    background: black;
+    color: white !important;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+
+.vehicle-selector {
+    background-color: #000;
+    border: 2px solid #8B0000;
+    border-radius: 1rem;
+    padding: 2rem;
+    max-width: 700px;
+    margin: 40px auto;
+    text-align: center;
+  }
+  
+  .vehicle-selector h2 {
+    font-size: 1.5rem;
+    color: #ff4d4d;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .vehicle-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .vehicle-grid button {
+    background-color: #1a1a1a;
+    color: white;
+    font-weight: 600;
+    padding: 0.9rem 1rem;
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-size: 1rem;
+  }
+  
+  .vehicle-grid button:hover {
+    background-color: #b22222;
+  }
+  
+  .vehicle-tips {
+    margin-top: 2rem;
+    text-align: left;
+    padding: 1rem;
+    background: #1a1a1a;
+    border-radius: 1rem;
+    border: 1px solid #333;
+  }
+
+  .reset-button {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border: 2px solid #8B0000;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .reset-button:hover {
+    background-color: #8B0000;
+  }
+
+  
+  .container {
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .title {
+    text-align: center;
+    color: #f87171;
+    margin-bottom: 2rem;
+  }
+  
+ /* Collapsibles */
+.collapsible {
+    background-color: #222;
+    color: white;
+    cursor: pointer;
+    padding: 1rem;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    font-size: 1.1rem;
+    border-radius: 0.5rem;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  .collapsible:hover,
+  .collapsible.active {
+    background-color: #b71c1c;
+  }
+  
+  .collapsible .chevron {
+    transition: transform 0.3s ease;
+    font-size: 1.2em;
+  }
+  
+  .collapsible.active .chevron {
+    transform: rotate(180deg);
+  }
+  
+  .content-collapsible {
+    padding: 0 1rem;
+    max-height: 0;
+    overflow: hidden;
+    background: rgba(20, 20, 20, 0.8);
+    color: #eee;
+    border-left: 3px solid crimson;
+    border-radius: 0 0 0.5rem 0.5rem;
+    margin-bottom: 12px;
+    transition: max-height 0.3s ease-out, padding 0.3s ease;
+  }
+  
+  /* When expanded, we add extra padding */
+  .content-collapsible.open {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .content-collapsible ul {
+    list-style-type: disc;
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+  
+  .content-collapsible ul ul {
+    list-style-type: circle;
+    margin-top: 0.5rem;
+  }
+  
+  /* Footer */
+  footer {
+    background: #8B0000;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.9em;
+    color: white;
+  }
+  
