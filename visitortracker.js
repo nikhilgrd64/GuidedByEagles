@@ -1,4 +1,3 @@
-// visitortracker.js
 import { db } from './firebase-init.js';
 import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
@@ -25,9 +24,9 @@ export async function logVisitor() {
   let ip = "unknown";
 
   try {
-    const response = await fetch("https://api64.ipify.org?format=json");
-    const data = await response.json();
-    ip = data.ip;
+    const response = await fetch("https://api.ipify.org?format=json"); // ✅ safer option
+    const { ip: fetchedIP } = await response.json();
+    ip = fetchedIP;
   } catch (e) {
     console.warn("⚠️ Could not fetch IP:", e);
   }
