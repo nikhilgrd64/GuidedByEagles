@@ -1,4 +1,5 @@
 // visitorTracker.js
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
@@ -13,9 +14,11 @@ const firebaseConfig = {
   measurementId: "G-3T1VPF4MR5"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Helper: Get Device Info
 function getDeviceInfo() {
   const userAgent = navigator.userAgent;
   const platform = navigator.platform;
@@ -28,31 +31,37 @@ function getDeviceInfo() {
   }
 
   return {
-    browser: navigator.userAgent,
-    deviceType: deviceType,
-    platform: platform
+    browser: userAgent,
+    deviceType,
+    platform
   };
 }
 
+// ✅ Main Visitor Logger Function
 export async function logVisitor() {
-  try {
-    const response = await fetch("https://api.ipify.org?format=json");
-    const data = await response.json();
-    const ip = data.ip;
-    const page = window.location.pathname;
-    const deviceInfo = getDeviceInfo();
+  console.log("Visitor tracker is running...");
+  let ip = "unknown";
 
+  try {
+    const response = await fetch("https://api64.ipify.org?format=json");
+    const data = await response.json();
+    ip = data.ip;
+  } catch (e) {
+    console.warn("⚠️ Could not fetch IP:", e);
+  }
+
+  const page = window.location.pathname;
+  const deviceInfo = getDeviceInfo();
+
+  try {
     await addDoc(collection(db, "visitors"), {
-      ip: ip,
-      page: page,
-      browser: deviceInfo.browser,
-      deviceType: deviceInfo.deviceType,
-      platform: deviceInfo.platform,
+      ip,
+      page,
+      ...deviceInfo,
       timestamp: serverTimestamp()
     });
+    console.log("✅ Visitor logged successfully");
   } catch (e) {
     console.error("Visitor tracking failed:", e);
   }
 }
-logVisitor(); // Auto-run when loaded
-
