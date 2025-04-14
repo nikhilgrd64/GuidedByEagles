@@ -1,3 +1,5 @@
+import { logVisitor } from './visitortracker.js';
+logVisitor();
 
 // ✅ Smooth Scrolling for Navigation
 document.querySelectorAll('nav ul li a').forEach(anchor => {
