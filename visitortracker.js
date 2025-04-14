@@ -54,3 +54,5 @@ export async function logVisitor() {
     console.error("Visitor tracking failed:", e);
   }
 }
+logVisitor(); // Auto-run when loaded
+
