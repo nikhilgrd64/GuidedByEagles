@@ -1,10 +1,51 @@
 import { db } from './firebase-init.js';
-import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Post-Trip Engagement page loaded!");
 
-    // Countdown Timer
+    const gallery = document.getElementById("story-gallery");
+
+    // 🧩 Fetch and Display Existing Stories
+    async function loadStories() {
+        gallery.innerHTML = "<p>Loading stories...</p>";
+
+        try {
+            const q = query(collection(db, "travelStories"), orderBy("submittedAt", "desc"));
+            const querySnapshot = await getDocs(q);
+            gallery.innerHTML = "";
+
+            if (querySnapshot.empty) {
+                gallery.innerHTML = "<p>No stories shared yet. Be the first one!</p>";
+            }
+
+            querySnapshot.forEach(doc => {
+                const data = doc.data();
+
+                const storyEl = document.createElement("div");
+                storyEl.classList.add("story-entry");
+                storyEl.innerHTML = `
+                    <h3>${data.title}</h3>
+                    <p>
+                        <strong>📍 Destination:</strong> ${data.destination}<br>
+                        <strong>📅 Travel Period:</strong> ${data.travelPeriod}<br>
+                        <strong>🗺️ Itinerary:</strong> ${data.itinerary}<br>
+                        <strong>🌟 Experiences:</strong> ${data.experiences}<br>
+                        <strong>🎯 Travel Tips:</strong> ${data.tips}<br>
+                        <strong>🔗 Media Links:</strong> ${data.links || "None"}
+                    </p>
+                `;
+                gallery.appendChild(storyEl);
+            });
+        } catch (error) {
+            console.error("❌ Error fetching stories:", error);
+            gallery.innerHTML = "<p>⚠️ Could not load stories. Please try again later.</p>";
+        }
+    }
+
+    loadStories(); // Load on page load
+
+    // ⏳ Countdown Timer
     function startCountdown(targetDate) {
         function updateCountdown() {
             const now = new Date().getTime();
@@ -28,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const nextTripDate = new Date("2025-07-01T00:00:00").getTime();
     startCountdown(nextTripDate);
 
-    // Story Submission Handler
+    // 📝 Handle Form Submission
     document.getElementById("story-form").addEventListener("submit", async function (event) {
         event.preventDefault();
 
@@ -60,25 +101,11 @@ document.addEventListener("DOMContentLoaded", function () {
             await addDoc(collection(db, "travelStories"), storyData);
             console.log("✅ Story added to Firestore");
 
-            // Show on page
-            const gallery = document.getElementById("story-gallery");
-            const newStory = document.createElement("div");
-            newStory.classList.add("story-entry");
-            newStory.innerHTML = `
-                <h3>${title}</h3>
-                <p>
-                    <strong>📍 Destination:</strong> ${destination}<br>
-                    <strong>📅 Travel Period:</strong> ${travelPeriod}<br>
-                    <strong>🗺️ Itinerary:</strong> ${itinerary}<br>
-                    <strong>🌟 Experiences:</strong> ${experiences}<br>
-                    <strong>🎯 Travel Tips:</strong> ${tips}<br>
-                    <strong>🔗 Media Links:</strong> ${links || "None"}
-                </p>
-            `;
-            gallery.prepend(newStory);
+            // Clear form and reload stories
             document.getElementById("story-form").reset();
+            loadStories(); // Refresh the gallery
 
-            // Show animation
+            // ✅ Animated message
             const successMsg = document.createElement("div");
             successMsg.innerHTML = "✅ Story submitted successfully!";
             successMsg.style.cssText = `
