@@ -1,3 +1,6 @@
+import { logVisitor } from './visitortracker.js';
+logVisitor();
+
 document.addEventListener("DOMContentLoaded", () => {
   // Handle collapsible sections
   const coll = document.querySelectorAll(".collapsible");
