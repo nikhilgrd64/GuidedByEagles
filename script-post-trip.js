@@ -1,3 +1,7 @@
+
+import { db } from './firebase-init.js';
+import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
 // script-post-trip.js
 
 document.addEventListener("DOMContentLoaded", function () {
