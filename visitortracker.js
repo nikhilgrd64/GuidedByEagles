@@ -2,8 +2,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
+// Firebase Configuration
 const firebaseConfig = {
-  // your Firebase config
+  apiKey: "AIzaSyD6TIslWAFvqUvm5GQMjZdUXl7lribpz5Q",
+  authDomain: "guided-by-eagles.firebaseapp.com",
+  projectId: "guided-by-eagles",
+  storageBucket: "guided-by-eagles.appspot.com",
+  messagingSenderId: "959481602259",
+  appId: "1:959481602259:web:1a0c79730838c408403426",
+  measurementId: "G-3T1VPF4MR5"
 };
 
 const app = initializeApp(firebaseConfig);
