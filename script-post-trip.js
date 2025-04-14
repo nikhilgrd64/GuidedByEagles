@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
         gallery.innerHTML = "<p>Loading stories...</p>";
 
         try {
-            const q = query(collection(db, "travelStories"), orderBy("submittedAt", "desc"));
+            const q = query(collection(db, "stories"), orderBy("submittedAt", "desc")); // ✅ updated collection name
             const querySnapshot = await getDocs(q);
             gallery.innerHTML = "";
 
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         try {
-            await addDoc(collection(db, "travelStories"), storyData);
+            await addDoc(collection(db, "stories"), storyData); // ✅ updated collection name
             console.log("✅ Story added to Firestore");
 
             // Clear form and reload stories
