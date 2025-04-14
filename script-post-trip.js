@@ -1,3 +1,6 @@
+import { logVisitor } from './visitortracker.js';
+logVisitor();
+
 // Import Firebase Modules
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
