@@ -111,8 +111,8 @@ export async function logVisitor() {
       timestamp: serverTimestamp()
     };
 
-    // Debugging logs
-    console.log("🚀 Session data to be sent:", payload);
+    // Debugging logs - let's see the session data before sending to Firebase
+    console.log("🚀 Session data to be sent to Firestore:", payload);
 
     try {
       // Save the session data to Firestore directly using addDoc
@@ -125,4 +125,7 @@ export async function logVisitor() {
 
   // Will trigger on full close (alt+f4, tab close, etc.)
   window.addEventListener("beforeunload", handleUnload);
+
+  // Adding an extra listener for 'unload' to ensure it's also captured on certain events like navigating away
+  window.addEventListener("unload", handleUnload);
 }
