@@ -64,9 +64,20 @@ export async function logVisitor() {
     const ipRes = await fetch("https://api.ipify.org?format=json");
     ip = (await ipRes.json()).ip;
     const geoRes = await fetch(`https://ipapi.co/${ip}/json/`);
-    const geo = await geoRes.json();
-    city = geo.city || "unknown";
-    country = geo.country_name || "unknown";
+    
+    // Check if response is JSON
+    const geoData = await geoRes.text();
+    try {
+      const geo = JSON.parse(geoData);  // Try parsing the JSON
+      city = geo.city || "unknown";
+      country = geo.country_name || "unknown";
+    } catch (err) {
+      console.warn("🌐 IP/Geo lookup failed:", err);
+      // Handle error gracefully if not JSON
+      city = "unknown";
+      country = "unknown";
+    }
+
   } catch (err) {
     console.warn("🌐 IP/Geo lookup failed:", err);
   }
