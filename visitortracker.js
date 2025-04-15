@@ -75,7 +75,6 @@ function endFullSession() {
 export async function logVisitor() {
   console.log("Visitor tracker is running...");
 
-  // Avoid duplicate "visitor" logs
   if (sessionStorage.getItem("visitor-logged")) return;
 
   const page = window.location.pathname;
@@ -99,11 +98,10 @@ export async function logVisitor() {
     console.warn("⚠️ Could not fetch IP or location:", e);
   }
 
-  //
-  // ✅ ORIGINAL PAGE SESSION TRACKING (UNCHANGED)
-  //
   const startTime = performance.now();
-  window.addEventListener("beforeunload", async () => {
+
+  // ✅ Handle session cleanup more reliably
+  const handleSessionEnd = async () => {
     const endTime = performance.now();
     const durationSec = Math.round((endTime - startTime) / 1000);
 
@@ -123,9 +121,6 @@ export async function logVisitor() {
       console.error("❌ Error logging page session:", e);
     }
 
-    //
-    // ✅ NEW: END FULL-SITE SESSION IF APPLICABLE
-    //
     const fullSessionResult = endFullSession();
     if (fullSessionResult) {
       const { session, durationSec } = fullSessionResult;
@@ -141,11 +136,17 @@ export async function logVisitor() {
         console.error("❌ Error logging full-site session:", e);
       }
     }
+  };
+
+  window.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      handleSessionEnd();
+    }
   });
 
-  //
-  // ✅ ORIGINAL "VISITOR" INFO TRACKING (UNCHANGED)
-  //
+  window.addEventListener("pagehide", handleSessionEnd);
+
+  // ✅ Visitor info tracking
   try {
     await addDoc(collection(db, "visitors"), {
       ip,
@@ -162,9 +163,7 @@ export async function logVisitor() {
     console.error("❌ Visitor info logging failed:", e);
   }
 
-  //
-  // ✅ NEW: FULL-SITE SESSION TRACKING
-  //
+  // ✅ Full-site session tracking
   const visitorData = { ip, city, country, referrer, ...deviceInfo };
   let session = getStoredSession();
 
@@ -173,5 +172,11 @@ export async function logVisitor() {
     console.log("🆕 Started new full-site session:", session.sessionId);
   }
 
+  // ✅ Ensure this runs on every page load
   updateSessionPage(page);
 }
+
+// Optional: auto-call updateSessionPage independently
+window.addEventListener("DOMContentLoaded", () => {
+  updateSessionPage(window.location.pathname);
+});
