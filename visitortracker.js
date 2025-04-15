@@ -2,7 +2,6 @@ import { db } from './firebase-init.js';
 import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 const SESSION_KEY = "full-site-session";
-const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 
 function getDeviceInfo() {
   const userAgent = navigator.userAgent;
@@ -16,11 +15,6 @@ function getDeviceInfo() {
 function getStoredSession() {
   const session = JSON.parse(localStorage.getItem(SESSION_KEY));
   if (!session) return null;
-  const now = Date.now();
-  if (now - session.lastActivity > SESSION_TIMEOUT) {
-    localStorage.removeItem(SESSION_KEY);
-    return null;
-  }
   return session;
 }
 
@@ -29,7 +23,7 @@ function startNewSession(visitorData) {
     sessionId: crypto.randomUUID(),
     startTime: Date.now(),
     lastActivity: Date.now(),
-    pagesVisited: [],
+    pagesVisited: [], // Just the list of visited pages
     ...visitorData
   };
   localStorage.setItem(SESSION_KEY, JSON.stringify(session));
@@ -44,37 +38,15 @@ function saveSession(session) {
 function markPageEntry(path) {
   let session = getStoredSession();
   if (!session) return;
-  session.pagesVisited.push({
-    path,
-    enterTimestamp: new Date().toISOString(),
-    exitTimestamp: null,
-    durationSec: null
-  });
-  saveSession(session);
-}
-
-function markPageExit() {
-  let session = getStoredSession();
-  if (!session || !session.pagesVisited.length) return;
-
-  const now = new Date();
-  const lastPage = session.pagesVisited[session.pagesVisited.length - 1];
-
-  if (!lastPage.exitTimestamp) {
-    lastPage.exitTimestamp = now.toISOString();
-    const enter = new Date(lastPage.enterTimestamp).getTime();
-    lastPage.durationSec = Math.round((now.getTime() - enter) / 1000);
-  }
+  session.pagesVisited.push(path);  // Only save the page path
   saveSession(session);
 }
 
 function endFullSession() {
   const session = getStoredSession();
   if (!session) return null;
-  markPageExit(); // ensure last page is closed
-  const durationSec = Math.round((Date.now() - session.startTime) / 1000);
   localStorage.removeItem(SESSION_KEY);
-  return { session, durationSec };
+  return { session };
 }
 
 export async function logVisitor() {
@@ -97,27 +69,26 @@ export async function logVisitor() {
   let session = getStoredSession();
   if (!session) session = startNewSession({ ip, city, country, referrer, ...deviceInfo });
 
-  markPageExit();    // ⛔️ Close previous page visit
-  markPageEntry(path); // ✅ Start new page visit
+  markPageEntry(path); // Start new page visit
 
   const handleUnload = async () => {
+    console.log("🚪 User is leaving the page. Finalizing session...");
+    
     const result = endFullSession();
     if (!result) return;
-    const { session, durationSec } = result;
+    const { session } = result;
+
     const payload = {
       ...session,
-      sessionDuration: durationSec,
       currentPage: path,
       timestamp: serverTimestamp()
     };
 
-    // Debugging logs - let's see the session data before sending to Firebase
-    console.log("🚀 Session data to be sent to Firestore:", payload);
+    console.log("💾 Saving session data to Firebase:", payload);
 
     try {
-      // Save the session data to Firestore directly using addDoc
-      const docRef = await addDoc(collection(db, "userSessions"), payload);
-      console.log("✅ Session saved:", docRef.id);
+      await addDoc(collection(db, "userSessions"), payload);
+      console.log("✅ Session saved successfully:", session.sessionId);
     } catch (e) {
       console.error("❌ Firebase write error:", e);
     }
@@ -125,7 +96,4 @@ export async function logVisitor() {
 
   // Will trigger on full close (alt+f4, tab close, etc.)
   window.addEventListener("beforeunload", handleUnload);
-
-  // Adding an extra listener for 'unload' to ensure it's also captured on certain events like navigating away
-  window.addEventListener("unload", handleUnload);
 }
