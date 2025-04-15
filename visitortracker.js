@@ -73,9 +73,7 @@ function endFullSession() {
 }
 
 export async function logVisitor() {
-  console.log("Visitor tracker is running...");
-
-  if (sessionStorage.getItem("visitor-logged")) return;
+  console.log("📡 Visitor tracker running...");
 
   const page = window.location.pathname;
   const referrer = document.referrer || "direct";
@@ -98,46 +96,43 @@ export async function logVisitor() {
     console.warn("⚠️ Could not fetch IP or location:", e);
   }
 
-  const startTime = performance.now();
+  const visitorData = { ip, city, country, referrer, ...deviceInfo };
+  const pageStartTime = performance.now();
 
-  // ✅ Handle session cleanup more reliably
+  let session = getStoredSession();
+  if (!session) {
+    session = startNewSession(visitorData);
+    console.log("🆕 New full-site session:", session.sessionId);
+  }
+
+  updateSessionPage(page);
+
   const handleSessionEnd = async () => {
-    const endTime = performance.now();
-    const durationSec = Math.round((endTime - startTime) / 1000);
-
-    try {
-      await addDoc(collection(db, "sessions"), {
-        ip,
-        city,
-        country,
-        page,
-        referrer,
-        sessionDuration: durationSec,
-        ...deviceInfo,
-        timestamp: serverTimestamp()
-      });
-      console.log(`✅ Session duration of ${durationSec} seconds logged.`);
-    } catch (e) {
-      console.error("❌ Error logging page session:", e);
-    }
-
+    const pageEndTime = performance.now();
+    const pageDuration = Math.round((pageEndTime - pageStartTime) / 1000);
     const fullSessionResult = endFullSession();
+
     if (fullSessionResult) {
       const { session, durationSec } = fullSessionResult;
 
+      const unifiedData = {
+        ...session,
+        currentPage: page,
+        pageDuration,
+        sessionDuration: durationSec,
+        timestamp: serverTimestamp()
+      };
+
       try {
-        await addDoc(collection(db, "fullSessions"), {
-          ...session,
-          sessionDuration: durationSec,
-          timestamp: serverTimestamp()
-        });
-        console.log(`📦 Full site session logged: ${durationSec}s`);
+        await addDoc(collection(db, "userSessions"), unifiedData);
+        console.log("✅ Unified session logged:", session.sessionId);
       } catch (e) {
-        console.error("❌ Error logging full-site session:", e);
+        console.error("❌ Failed to log unified session:", e);
       }
     }
   };
 
+  // Save session on visibility change or page unload
   window.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") {
       handleSessionEnd();
@@ -145,38 +140,4 @@ export async function logVisitor() {
   });
 
   window.addEventListener("pagehide", handleSessionEnd);
-
-  // ✅ Visitor info tracking
-  try {
-    await addDoc(collection(db, "visitors"), {
-      ip,
-      city,
-      country,
-      page,
-      referrer,
-      ...deviceInfo,
-      timestamp: serverTimestamp()
-    });
-    sessionStorage.setItem("visitor-logged", "true");
-    console.log("✅ Visitor info logged");
-  } catch (e) {
-    console.error("❌ Visitor info logging failed:", e);
-  }
-
-  // ✅ Full-site session tracking
-  const visitorData = { ip, city, country, referrer, ...deviceInfo };
-  let session = getStoredSession();
-
-  if (!session) {
-    session = startNewSession(visitorData);
-    console.log("🆕 Started new full-site session:", session.sessionId);
-  }
-
-  // ✅ Ensure this runs on every page load
-  updateSessionPage(page);
 }
-
-// Optional: auto-call updateSessionPage independently
-window.addEventListener("DOMContentLoaded", () => {
-  updateSessionPage(window.location.pathname);
-});
