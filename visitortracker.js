@@ -1,5 +1,5 @@
 import { db } from './firebase-init.js';
-import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 const SESSION_KEY = "full-site-session";
 
@@ -13,8 +13,7 @@ function getDeviceInfo() {
 }
 
 function getStoredSession() {
-  const session = JSON.parse(localStorage.getItem(SESSION_KEY));
-  return session;
+  return JSON.parse(localStorage.getItem(SESSION_KEY));
 }
 
 function startNewSession(visitorData) {
@@ -37,30 +36,36 @@ function saveSession(session) {
 function markPageEntry(path) {
   let session = getStoredSession();
   if (!session) return;
-  session.pagesVisited.push(path);
+  if (!session.pagesVisited.includes(path)) {
+    session.pagesVisited.push(path);
+  }
   saveSession(session);
 }
 
-function endSessionAndUpload() {
-  const session = getStoredSession();
-  if (!session) return;
-
-  localStorage.removeItem(SESSION_KEY);
-  const payload = {
+// Upload with fallback (sendBeacon → fetch)
+function uploadSessionReliable(session) {
+  const sessionData = {
     ...session,
-    timestamp: serverTimestamp()
+    timestamp: new Date().toISOString(), // fallback timestamp
   };
 
-  // Use sendBeacon for reliable upload during unload
-  try {
-    navigator.sendBeacon = navigator.sendBeacon || function () {}; // fallback
-    const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
-    navigator.sendBeacon('/upload-session-endpoint', blob); // Optional: Backend endpoint
-  } catch (e) {
-    console.warn('Beacon failed, falling back to normal addDoc', e);
-    addDoc(collection(db, "userSessions"), payload)
-      .then(() => console.log("✅ Session saved:", session.sessionId))
-      .catch((e) => console.error("❌ Firebase error:", e));
+  const blob = new Blob([JSON.stringify(sessionData)], {
+    type: "application/json",
+  });
+
+  const beaconSuccess = navigator.sendBeacon(
+    "https://firestore.googleapis.com/v1/projects/guided-by-eagles/databases/(default)/documents/userSessions?documentId=" + session.sessionId,
+    blob
+  );
+
+  if (!beaconSuccess) {
+    // Fallback if sendBeacon fails
+    fetch("https://firestore.googleapis.com/v1/projects/guided-by-eagles/databases/(default)/documents/userSessions?documentId=" + session.sessionId, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(sessionData),
+      keepalive: true
+    }).then(() => console.log("✅ Fallback fetch worked"));
   }
 }
 
@@ -88,7 +93,16 @@ export async function logVisitor() {
 
   markPageEntry(path);
 
-  window.addEventListener("beforeunload", () => {
-    endSessionAndUpload();
+  // Trigger on close
+  window.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      const session = getStoredSession();
+      if (!session) return;
+
+      saveSession(session); // latest save
+
+      uploadSessionReliable(session);
+      localStorage.removeItem(SESSION_KEY);
+    }
   });
 }
