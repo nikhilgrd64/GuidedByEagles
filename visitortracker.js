@@ -54,19 +54,40 @@ function updateSessionPage(path) {
   const session = getStoredSession();
   if (!session) return;
 
+  const now = Date.now();
+
+  // ⏱️ Close the previous page visit if one exists
+  const lastVisit = session.pagesVisited[session.pagesVisited.length - 1];
+  if (lastVisit && !lastVisit.exitTimestamp) {
+    lastVisit.exitTimestamp = new Date(now).toISOString();
+    lastVisit.durationSec = Math.round((now - new Date(lastVisit.enterTimestamp).getTime()) / 1000);
+  }
+
+  // 📥 Push current page info
   session.pagesVisited.push({
     path,
-    timestamp: new Date().toISOString()
+    enterTimestamp: new Date(now).toISOString(),
+    exitTimestamp: null, // will be filled on exit
+    durationSec: null
   });
-  session.lastActivity = Date.now();
+
+  session.lastActivity = now;
   localStorage.setItem(SESSION_KEY, JSON.stringify(session));
 }
 
 function endFullSession() {
+  const now = Date.now();
   const session = getStoredSession();
   if (!session) return null;
 
-  const durationSec = Math.round((Date.now() - session.startTime) / 1000);
+  // ⏱️ End the last page visit
+  const lastVisit = session.pagesVisited[session.pagesVisited.length - 1];
+  if (lastVisit && !lastVisit.exitTimestamp) {
+    lastVisit.exitTimestamp = new Date(now).toISOString();
+    lastVisit.durationSec = Math.round((now - new Date(lastVisit.enterTimestamp).getTime()) / 1000);
+  }
+
+  const durationSec = Math.round((now - session.startTime) / 1000);
   localStorage.removeItem(SESSION_KEY);
 
   return { session, durationSec };
@@ -97,7 +118,6 @@ export async function logVisitor() {
   }
 
   const visitorData = { ip, city, country, referrer, ...deviceInfo };
-  const pageStartTime = performance.now();
 
   let session = getStoredSession();
   if (!session) {
@@ -105,20 +125,18 @@ export async function logVisitor() {
     console.log("🆕 New full-site session:", session.sessionId);
   }
 
-  updateSessionPage(page);
+  updateSessionPage(page); // ✅ logs current page entry
 
   const handleSessionEnd = async () => {
-    const sessionEndTime = performance.now();
-    const pageDuration = Math.round((sessionEndTime - pageStartTime) / 1000);
-    const fullSessionResult = endFullSession();
+    updateSessionPage(page); // ⏱️ Final page exit logging
 
+    const fullSessionResult = endFullSession();
     if (fullSessionResult) {
       const { session, durationSec } = fullSessionResult;
 
       const unifiedData = {
         ...session,
         currentPage: page,
-        pageDuration: pageDuration,
         sessionDuration: durationSec,
         timestamp: serverTimestamp()
       };
@@ -132,7 +150,7 @@ export async function logVisitor() {
     }
   };
 
-  // Save session only when tab is closed or user navigates away
+  // 🔁 When user leaves page
   window.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") {
       handleSessionEnd();
@@ -140,9 +158,4 @@ export async function logVisitor() {
   });
 
   window.addEventListener("pagehide", handleSessionEnd);
-
-  // Optionally, track page changes and update session without sending to Firebase
-  window.addEventListener("DOMContentLoaded", () => {
-    updateSessionPage(window.location.pathname);
-  });
 }
