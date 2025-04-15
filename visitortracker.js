@@ -2,22 +2,23 @@ import { db } from './firebase-init.js';
 import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 const SESSION_KEY = "full-site-session";
-const SESSION_TIMEOUT = 30 * 60 * 1000;
+const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 
 function getDeviceInfo() {
-  const userAgent = navigator.userAgent;
+  const ua = navigator.userAgent;
   const platform = navigator.platform;
-  let deviceType = "Desktop";
-  if (/Mobi|Android/i.test(userAgent)) deviceType = "Mobile";
-  else if (/iPad|Tablet/i.test(userAgent)) deviceType = "Tablet";
-  return { browser: userAgent, deviceType, platform };
+  const deviceType = /Mobi|Android/i.test(ua)
+    ? "Mobile"
+    : /iPad|Tablet/i.test(ua)
+    ? "Tablet"
+    : "Desktop";
+  return { browser: ua, deviceType, platform };
 }
 
 function getStoredSession() {
   const session = JSON.parse(localStorage.getItem(SESSION_KEY));
   if (!session) return null;
-  const now = Date.now();
-  if (now - session.lastActivity > SESSION_TIMEOUT) {
+  if (Date.now() - session.lastActivity > SESSION_TIMEOUT) {
     localStorage.removeItem(SESSION_KEY);
     return null;
   }
@@ -41,8 +42,20 @@ function saveSession(session) {
   localStorage.setItem(SESSION_KEY, JSON.stringify(session));
 }
 
+function markPageExit() {
+  const session = getStoredSession();
+  if (!session || !session.pagesVisited.length) return;
+  const lastPage = session.pagesVisited[session.pagesVisited.length - 1];
+  if (!lastPage.exitTimestamp) {
+    const now = new Date();
+    lastPage.exitTimestamp = now.toISOString();
+    lastPage.durationSec = Math.round((now - new Date(lastPage.enterTimestamp)) / 1000);
+    saveSession(session);
+  }
+}
+
 function markPageEntry(path) {
-  let session = getStoredSession();
+  const session = getStoredSession();
   if (!session) return;
   session.pagesVisited.push({
     path,
@@ -53,25 +66,10 @@ function markPageEntry(path) {
   saveSession(session);
 }
 
-function markPageExit() {
-  let session = getStoredSession();
-  if (!session || !session.pagesVisited.length) return;
-
-  const now = new Date();
-  const lastPage = session.pagesVisited[session.pagesVisited.length - 1];
-
-  if (!lastPage.exitTimestamp) {
-    lastPage.exitTimestamp = now.toISOString();
-    const enter = new Date(lastPage.enterTimestamp).getTime();
-    lastPage.durationSec = Math.round((now.getTime() - enter) / 1000);
-  }
-  saveSession(session);
-}
-
 function endFullSession() {
   const session = getStoredSession();
   if (!session) return null;
-  markPageExit(); // ensure last page is closed
+  markPageExit(); // close last page
   const durationSec = Math.round((Date.now() - session.startTime) / 1000);
   localStorage.removeItem(SESSION_KEY);
   return { session, durationSec };
@@ -81,8 +79,8 @@ export async function logVisitor() {
   const path = window.location.pathname;
   const referrer = document.referrer || "direct";
   const deviceInfo = getDeviceInfo();
-  let ip = "unknown", city = "unknown", country = "unknown";
 
+  let ip = "unknown", city = "unknown", country = "unknown";
   try {
     const ipRes = await fetch("https://api.ipify.org?format=json");
     ip = (await ipRes.json()).ip;
@@ -91,19 +89,23 @@ export async function logVisitor() {
     city = geo.city || "unknown";
     country = geo.country_name || "unknown";
   } catch (e) {
-    console.warn("🌐 IP/Geo fetch failed:", e);
+    console.warn("🌍 Failed to get IP/location:", e);
   }
 
   let session = getStoredSession();
-  if (!session) session = startNewSession({ ip, city, country, referrer, ...deviceInfo });
+  if (!session) {
+    session = startNewSession({ ip, city, country, referrer, ...deviceInfo });
+  }
 
-  markPageExit();    // ⛔️ Close previous page visit
-  markPageEntry(path); // ✅ Start new page visit
+  markPageExit();     // ⛔ Close previous page
+  markPageEntry(path); // ✅ Log current page
 
-  const handleUnload = async () => {
+  // ⛔ Log only when tab is CLOSED (not switched)
+  window.addEventListener("beforeunload", async () => {
     const result = endFullSession();
     if (!result) return;
     const { session, durationSec } = result;
+
     const payload = {
       ...session,
       sessionDuration: durationSec,
@@ -113,12 +115,9 @@ export async function logVisitor() {
 
     try {
       await addDoc(collection(db, "userSessions"), payload);
-      console.log("✅ Session saved:", session.sessionId);
-    } catch (e) {
-      console.error("❌ Firebase write error:", e);
+      console.log("✅ Session logged:", session.sessionId);
+    } catch (err) {
+      console.error("❌ Firebase error:", err);
     }
-  };
-
-  // Will trigger on full close (alt+f4, tab close, etc.)
-  window.addEventListener("beforeunload", handleUnload);
+  });
 }
