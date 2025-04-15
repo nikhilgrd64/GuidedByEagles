@@ -111,12 +111,13 @@ export async function logVisitor() {
       timestamp: serverTimestamp()
     };
 
+    // Debugging logs
+    console.log("🚀 Session data to be sent:", payload);
+
     try {
-      navigator.sendBeacon(
-        "https://firestore.googleapis.com/v1/projects/guided-by-eagles/databases/(default)/documents/userSessions",
-        new Blob([JSON.stringify(payload)], { type: "application/json" })
-      );
-      console.log("✅ Session saved:", session.sessionId);
+      // Save the session data to Firestore directly using addDoc
+      const docRef = await addDoc(collection(db, "userSessions"), payload);
+      console.log("✅ Session saved:", docRef.id);
     } catch (e) {
       console.error("❌ Firebase write error:", e);
     }
