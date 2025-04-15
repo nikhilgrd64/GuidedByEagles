@@ -1,21 +1,22 @@
 import { db } from './firebase-init.js';
-import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 const SESSION_KEY = "full-site-session";
 
+// Get device info
 function getDeviceInfo() {
-  const userAgent = navigator.userAgent;
+  const ua = navigator.userAgent;
   const platform = navigator.platform;
-  let deviceType = "Desktop";
-  if (/Mobi|Android/i.test(userAgent)) deviceType = "Mobile";
-  else if (/iPad|Tablet/i.test(userAgent)) deviceType = "Tablet";
-  return { browser: userAgent, deviceType, platform };
+  let deviceType = /Mobi|Android/i.test(ua) ? "Mobile" : /iPad|Tablet/i.test(ua) ? "Tablet" : "Desktop";
+  return { browser: ua, deviceType, platform };
 }
 
+// Get session from localStorage
 function getStoredSession() {
-  return JSON.parse(localStorage.getItem(SESSION_KEY));
+  return JSON.parse(localStorage.getItem(SESSION_KEY)) || null;
 }
 
+// Start new session
 function startNewSession(visitorData) {
   const session = {
     sessionId: crypto.randomUUID(),
@@ -28,53 +29,36 @@ function startNewSession(visitorData) {
   return session;
 }
 
+// Save session to localStorage
 function saveSession(session) {
   session.lastActivity = Date.now();
   localStorage.setItem(SESSION_KEY, JSON.stringify(session));
 }
 
+// Track a page visit
 function markPageEntry(path) {
   let session = getStoredSession();
   if (!session) return;
-  if (!session.pagesVisited.includes(path)) {
-    session.pagesVisited.push(path);
-  }
+  session.pagesVisited.push(path);
   saveSession(session);
 }
 
-// Upload with fallback (sendBeacon → fetch)
-function uploadSessionReliable(session) {
-  const sessionData = {
-    ...session,
-    timestamp: new Date().toISOString(), // fallback timestamp
-  };
-
-  const blob = new Blob([JSON.stringify(sessionData)], {
-    type: "application/json",
-  });
-
-  const beaconSuccess = navigator.sendBeacon(
-    "https://firestore.googleapis.com/v1/projects/guided-by-eagles/databases/(default)/documents/userSessions?documentId=" + session.sessionId,
-    blob
-  );
-
-  if (!beaconSuccess) {
-    // Fallback if sendBeacon fails
-    fetch("https://firestore.googleapis.com/v1/projects/guided-by-eagles/databases/(default)/documents/userSessions?documentId=" + session.sessionId, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(sessionData),
-      keepalive: true
-    }).then(() => console.log("✅ Fallback fetch worked"));
-  }
+// End session, remove from storage
+function endFullSession() {
+  const session = getStoredSession();
+  if (!session) return null;
+  localStorage.removeItem(SESSION_KEY);
+  return { session };
 }
 
+// Main logger
 export async function logVisitor() {
   const path = window.location.pathname;
   const referrer = document.referrer || "direct";
   const deviceInfo = getDeviceInfo();
 
   let ip = "unknown", city = "unknown", country = "unknown";
+
   try {
     const ipRes = await fetch("https://api.ipify.org?format=json");
     ip = (await ipRes.json()).ip;
@@ -82,27 +66,30 @@ export async function logVisitor() {
     const geo = await geoRes.json();
     city = geo.city || "unknown";
     country = geo.country_name || "unknown";
-  } catch (e) {
-    console.warn("🌐 IP/Geo fetch failed:", e);
+  } catch (err) {
+    console.warn("🌐 IP/Geo lookup failed:", err);
   }
 
   let session = getStoredSession();
-  if (!session) {
-    session = startNewSession({ ip, city, country, referrer, ...deviceInfo });
-  }
+  if (!session) session = startNewSession({ ip, city, country, referrer, ...deviceInfo });
 
   markPageEntry(path);
 
-  // Trigger on close
-  window.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") {
-      const session = getStoredSession();
-      if (!session) return;
+  window.addEventListener("beforeunload", async () => {
+    const result = endFullSession();
+    if (!result) return;
 
-      saveSession(session); // latest save
+    const { session } = result;
+    const payload = {
+      ...session,
+      timestamp: serverTimestamp()
+    };
 
-      uploadSessionReliable(session);
-      localStorage.removeItem(SESSION_KEY);
+    try {
+      await addDoc(collection(db, "userSessions"), payload);
+      console.log("✅ Session saved:", session.sessionId);
+    } catch (err) {
+      console.error("❌ Firestore write failed:", err);
     }
   });
 }
