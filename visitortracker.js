@@ -18,13 +18,15 @@ function getStoredSession() {
 
 // Start new session
 function startNewSession(visitorData) {
+  const timestamp = Date.now();
+  const sessionId = `${new Date(timestamp).toISOString().replace(/[-T:.Z]/g, '')}-${visitorData.deviceType}`;
+
   const session = {
-    sessionId: crypto.randomUUID(),
-    startTime: Date.now(),
-    lastActivity: Date.now(),
-    pagesVisited: [],
+    sessionId, // Create sessionId based on timestamp and device type
+    lastActivity: timestamp,
     ...visitorData
   };
+
   localStorage.setItem(SESSION_KEY, JSON.stringify(session));
   return session;
 }
@@ -39,7 +41,6 @@ function saveSession(session) {
 function markPageEntry(path) {
   let session = getStoredSession();
   if (!session) return;
-  session.pagesVisited.push(path);
   saveSession(session);
 }
 
@@ -82,7 +83,7 @@ export async function logVisitor() {
     const { session } = result;
     const payload = {
       ...session,
-      timestamp: serverTimestamp()
+      timestamp: serverTimestamp() // Add timestamp for Firestore
     };
 
     try {
