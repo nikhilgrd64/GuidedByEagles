@@ -108,8 +108,8 @@ export async function logVisitor() {
   updateSessionPage(page);
 
   const handleSessionEnd = async () => {
-    const pageEndTime = performance.now();
-    const pageDuration = Math.round((pageEndTime - pageStartTime) / 1000);
+    const sessionEndTime = performance.now();
+    const pageDuration = Math.round((sessionEndTime - pageStartTime) / 1000);
     const fullSessionResult = endFullSession();
 
     if (fullSessionResult) {
@@ -118,21 +118,21 @@ export async function logVisitor() {
       const unifiedData = {
         ...session,
         currentPage: page,
-        pageDuration,
+        pageDuration: pageDuration,
         sessionDuration: durationSec,
         timestamp: serverTimestamp()
       };
 
       try {
         await addDoc(collection(db, "userSessions"), unifiedData);
-        console.log("✅ Unified session logged:", session.sessionId);
+        console.log("✅ Full session logged:", session.sessionId);
       } catch (e) {
-        console.error("❌ Failed to log unified session:", e);
+        console.error("❌ Failed to log full session:", e);
       }
     }
   };
 
-  // Save session on visibility change or page unload
+  // Save session only when tab is closed or user navigates away
   window.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") {
       handleSessionEnd();
@@ -140,4 +140,9 @@ export async function logVisitor() {
   });
 
   window.addEventListener("pagehide", handleSessionEnd);
+
+  // Optionally, track page changes and update session without sending to Firebase
+  window.addEventListener("DOMContentLoaded", () => {
+    updateSessionPage(window.location.pathname);
+  });
 }
