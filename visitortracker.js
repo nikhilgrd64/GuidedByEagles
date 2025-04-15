@@ -14,7 +14,6 @@ function getDeviceInfo() {
 
 function getStoredSession() {
   const session = JSON.parse(localStorage.getItem(SESSION_KEY));
-  if (!session) return null;
   return session;
 }
 
@@ -23,7 +22,7 @@ function startNewSession(visitorData) {
     sessionId: crypto.randomUUID(),
     startTime: Date.now(),
     lastActivity: Date.now(),
-    pagesVisited: [], // Just the list of visited pages
+    pagesVisited: [],
     ...visitorData
   };
   localStorage.setItem(SESSION_KEY, JSON.stringify(session));
@@ -38,23 +37,39 @@ function saveSession(session) {
 function markPageEntry(path) {
   let session = getStoredSession();
   if (!session) return;
-  session.pagesVisited.push(path);  // Only save the page path
+  session.pagesVisited.push(path);
   saveSession(session);
 }
 
-function endFullSession() {
+function endSessionAndUpload() {
   const session = getStoredSession();
-  if (!session) return null;
+  if (!session) return;
+
   localStorage.removeItem(SESSION_KEY);
-  return { session };
+  const payload = {
+    ...session,
+    timestamp: serverTimestamp()
+  };
+
+  // Use sendBeacon for reliable upload during unload
+  try {
+    navigator.sendBeacon = navigator.sendBeacon || function () {}; // fallback
+    const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+    navigator.sendBeacon('/upload-session-endpoint', blob); // Optional: Backend endpoint
+  } catch (e) {
+    console.warn('Beacon failed, falling back to normal addDoc', e);
+    addDoc(collection(db, "userSessions"), payload)
+      .then(() => console.log("✅ Session saved:", session.sessionId))
+      .catch((e) => console.error("❌ Firebase error:", e));
+  }
 }
 
 export async function logVisitor() {
   const path = window.location.pathname;
   const referrer = document.referrer || "direct";
   const deviceInfo = getDeviceInfo();
-  let ip = "unknown", city = "unknown", country = "unknown";
 
+  let ip = "unknown", city = "unknown", country = "unknown";
   try {
     const ipRes = await fetch("https://api.ipify.org?format=json");
     ip = (await ipRes.json()).ip;
@@ -67,33 +82,13 @@ export async function logVisitor() {
   }
 
   let session = getStoredSession();
-  if (!session) session = startNewSession({ ip, city, country, referrer, ...deviceInfo });
+  if (!session) {
+    session = startNewSession({ ip, city, country, referrer, ...deviceInfo });
+  }
 
-  markPageEntry(path); // Start new page visit
+  markPageEntry(path);
 
-  const handleUnload = async () => {
-    console.log("🚪 User is leaving the page. Finalizing session...");
-    
-    const result = endFullSession();
-    if (!result) return;
-    const { session } = result;
-
-    const payload = {
-      ...session,
-      currentPage: path,
-      timestamp: serverTimestamp()
-    };
-
-    console.log("💾 Saving session data to Firebase:", payload);
-
-    try {
-      await addDoc(collection(db, "userSessions"), payload);
-      console.log("✅ Session saved successfully:", session.sessionId);
-    } catch (e) {
-      console.error("❌ Firebase write error:", e);
-    }
-  };
-
-  // Will trigger on full close (alt+f4, tab close, etc.)
-  window.addEventListener("beforeunload", handleUnload);
+  window.addEventListener("beforeunload", () => {
+    endSessionAndUpload();
+  });
 }
